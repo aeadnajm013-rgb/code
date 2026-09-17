@@ -4,109 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خوێندنەوەی دەقی لینک</title>
-
     <style>
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 20px;
-            text-align: right;
-        }
-        .container {
-            max-width: 700px;
-            margin: 30px auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #status {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #555;
-            text-align: center;
-        }
-        pre {
-            background-color: #272c34;
-            color: #38d9a9;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            direction: ltr;
-            text-align: left;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
+        body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; text-align: right; }
+        .container { max-width: 700px; margin: 30px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; text-align: center; }
+        button { background-color: #007bff; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        #status { margin-top: 15px; font-weight: bold; text-align: center; }
+        pre { background-color: #272c34; color: #38d9a9; padding: 15px; border-radius: 8px; font-family: monospace; direction: ltr; text-align: left; white-space: pre-wrap; word-wrap: break-word; max-height: 400px; overflow-y: auto; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>خوێندنەوەی ڕاستەوخۆی دەقی لینکەکە</h2>
-    
     <button onclick="fetchLinkContent()">خوێندنەوەی زانیارییەکان</button>
-    
-    <div id="status">داگرتنی دوگمەکە بکە بۆ هێنانی دەقەکە...</div>
+    <div id="status">کلیک لە دوگمەکە بکە...</div>
     <pre id="output">لێرەدا دەقەکە دەردەکەوێت...</pre>
 </div>
 
 <script>
     async function fetchLinkContent() {
         const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
-        // بەکارهێنانی CORS Proxy بۆ ئەوەی وێبگەڕ ڕێگری نەکات
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
-
         const statusDiv = document.getElementById('status');
         const outputPre = document.getElementById('output');
 
-        statusDiv.innerText = 'تکایە چاوەڕێ بکە... زانیارییەکان لە وەرگرتندان';
+        statusDiv.innerText = 'تکایە چاوەڕێ بکە... هەوڵی بەستنەوە دەدرێت';
         statusDiv.style.color = '#007bff';
 
+        // ڕێگەی یەکەم: بەکارهێنانی api.allorigins.win
         try {
-            const response = await fetch(proxyUrl);
-            
-            if (!response.ok) {
-                throw new Error('کێشەیەک ڕوویدا لە وەرگرتنی دەقەکە (کۆد: ' + response.status + ')');
-            }
-
+            const proxy1 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
+            const response = await fetch(proxy1);
+            if (!response.ok) throw new Error();
             const textData = await response.text();
-
-            statusDiv.innerText = 'بەسەرکەوتوویی خوێنراوە!';
+            
+            statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
             statusDiv.style.color = 'green';
             outputPre.innerText = textData;
+            return;
+        } catch (e) {
+            // ئەگەر ڕێگەی یەکەم سەرکەوتوو نەبوو، دەچێتە سەر ڕێگەی دووەم
+        }
 
-        } catch (error) {
-            statusDiv.innerText = 'هەڵە ڕوویدا لە کاتی هێنانی زانیاری!';
+        // ڕێگەی دووەم: بەکارهێنانی corsproxy.io
+        try {
+            const proxy2 = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+            const response = await fetch(proxy2);
+            if (!response.ok) throw new Error();
+            const textData = await response.text();
+
+            statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
+            statusDiv.style.color = 'green';
+            outputPre.innerText = textData;
+            return;
+        } catch (e) {
+            statusDiv.innerText = 'نەتوانرا زانیارییەکان بهێنرێت! (دەتوانیت سێرڤەرەکە یان بەستەرەکە بپشکنیت)';
             statusDiv.style.color = 'red';
-            outputPre.innerText = error.message;
+            outputPre.innerText = 'کێشە لە پەیوەندیکردن بە IP و پۆڕتی سێرڤەرەکەدا هەیە.';
         }
     }
-
-    // ئەگەر دەتهەوێت هەر کە پەڕەکە کرایەوە ڕاستەوخۆ دەقەکە بهێنێت، ئەم دێڕەی خوارەوە چالاک بکە:
-    // window.onload = fetchLinkContent;
 </script>
 
 </body>
