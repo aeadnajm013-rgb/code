@@ -3,67 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دەرهێنانی کۆد</title>
+    <title>دەرهێنانی کۆدی ٦ ژمارەیی</title>
     <style>
         body { font-family: Tahoma, sans-serif; background: #f4f6f8; text-align: center; padding-top: 50px; }
         .card { background: white; max-width: 450px; margin: auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         button { background: #007bff; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
         button:hover { background: #0056b3; }
-        .code { font-size: 40px; font-weight: bold; color: #28a745; margin-top: 20px; letter-spacing: 4px; font-family: monospace; }
-        #status { font-size: 14px; color: #666; margin-top: 10px; }
-        iframe { width: 0; height: 0; border: 0; visibility: hidden; }
+        .code { font-size: 42px; font-weight: bold; color: #28a745; margin-top: 20px; letter-spacing: 5px; font-family: monospace; }
+        #status { font-size: 14px; color: #666; margin-top: 12px; }
+        iframe { width: 0; height: 0; border: 0; visibility: hidden; display: none; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>کۆدی ٦ ژمارەیی</h2>
-    <button onclick="loadCode()">نوێکردنەوە و هێنانی کۆد</button>
+    <button onclick="startFetching()">نوێکردنەوە و هێنانی کۆد</button>
     <div id="status">داگرتنی دوگمەکە بکە...</div>
     <div class="code" id="result">------</div>
 </div>
 
-<!-- iframe شاراوە بۆ بارکردنی لینکەکە بێ کێشەی CORS -->
+<!-- iframe بۆ بارکردنی لینکەکە لە پاشبنەمادا -->
 <iframe id="dataFrame"></iframe>
 
 <script>
-    function loadCode() {
+    let checkInterval = null;
+
+    function startFetching() {
         const resultDiv = document.getElementById('result');
         const statusDiv = document.getElementById('status');
         const iframe = document.getElementById('dataFrame');
 
-        statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە...';
+        // ڕاگرتنی پشکنینەکانی پێشوو ئەگەر هەبن
+        if (checkInterval) clearInterval(checkInterval);
+
+        statusDiv.innerText = 'پەڕەکە لە باربووندایە... تکایە کەمێک چاوەڕێ بکە';
         statusDiv.style.color = '#007bff';
         resultDiv.innerText = '......';
 
-        // بارکردنی لینکەکە لە ناو iframe
+        // بارکردنی لینکەکە بە ژمارەیەکی خۆکار بۆ ڕێگری لە کات ئاگاداری (Cache)
         const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + Date.now();
         iframe.src = targetUrl;
 
-        iframe.onload = function() {
+        let attempts = 0;
+        const maxAttempts = 10; // هەوڵدان تا ١٠ جار (هەر ٥٠٠ مپ چرکەیەک)
+
+        // دەستپێکردنی پشکنینی بەردەوام دوای باری iframe
+        checkInterval = setInterval(() => {
+            attempts++;
+
             try {
-                // خوێندنەوەی دەقی ناو iframe
-                const text = iframe.contentDocument.body.innerText || iframe.contentDocument.body.textContent;
+                const text = iframe.contentDocument.body.innerText || iframe.contentDocument.body.textContent || '';
                 
-                // دەرهێنانی ٦ ژمارەکە
+                // گەڕان بەدوای ٦ ژمارەکەدا
                 const match = text.match(/\b\d{6}\b/);
 
                 if (match) {
+                    // کە ژمارەکە دۆزرایەوە ڕاستەوخۆ دەیوەستێنێت
                     resultDiv.innerText = match[0];
                     statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
                     statusDiv.style.color = 'green';
-                } else {
-                    resultDiv.innerText = text.trim() || 'دەق بەتاڵە';
-                    statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە لە ناو دەقەکەدا!';
+                    clearInterval(checkInterval);
+                } else if (attempts >= maxAttempts) {
+                    // ئەگەر دوای کاتەکە ژمارەکە نەهات
+                    if (text.trim().length > 0) {
+                        resultDiv.innerText = text.trim();
+                        statusDiv.innerText = 'دەقەکە هات بەڵام کۆدی ٦ ژمارەیی تێدا نەبوو!';
+                    } else {
+                        resultDiv.innerText = 'ERROR';
+                        statusDiv.innerText = 'کاتەکە بەسەرچوو، دەقەکە بارنەبوو!';
+                    }
                     statusDiv.style.color = 'orange';
+                    clearInterval(checkInterval);
                 }
             } catch (e) {
-                // ئەگەر iframe بلۆک کرا لەلایەن وێبگەڕەکەوە
-                resultDiv.innerText = 'کێشەی ئاسایش';
-                statusDiv.innerText = 'وێبگەڕەکەت ڕێگەی نەدا ڕاستەوخۆ دەقەکە بخوێنرێتەوە.';
+                resultDiv.innerText = 'ERROR';
+                statusDiv.innerText = 'وێبگەڕ ڕێگەی نەدا لە ناو iframe دەقەکە بخوێنرێتەوە (CORS)';
                 statusDiv.style.color = 'red';
+                clearInterval(checkInterval);
             }
-        };
+        }, 500); // ٥٠٠ مپ چرکە جارێک دەپشکنێتەوە
     }
 </script>
 
