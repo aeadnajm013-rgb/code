@@ -1,338 +1,899 @@
 <!DOCTYPE html>
-<html lang="ckb" dir="rtl">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>AYAD PHONE</title>
+    <title>ABO PHONE - Account Info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #030712;
-            --card-bg: rgba(17, 24, 39, 0.85);
-            --primary-glow: #00f2fe;
-            --secondary-glow: #4facfe;
-            --text-color: #f3f4f6;
-            --input-bg: #1f2937;
-            --border-color: #374151;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: 'Noto Kufi Arabic', 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: #030712;
+            background: radial-gradient(circle at top, #141000 0%, #030712 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
+            padding: 20px;
         }
-
         .container {
+            background: rgba(15, 15, 18, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid #eab308;
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.25);
             width: 100%;
-            max-width: 480px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            max-width: 440px;
+            border-radius: 28px;
+            overflow: hidden;
+            padding: 30px 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 4px;
+            background: rgba(3, 7, 18, 0.8);
+            padding: 3px;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
-            backdrop-filter: blur(10px);
-            text-align: center;
+            border: 1px solid #ca8a04;
+            z-index: 10;
         }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow);
-            margin-bottom: 25px;
-            letter-spacing: 2px;
+        [dir="ltr"] .lang-switcher {
+            left: auto;
+            right: 15px;
         }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            border-color: var(--primary-glow);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-        }
-
-        button {
-            padding: 12px 20px;
-            background: linear-gradient(45deg, var(--secondary-glow), var(--primary-glow));
-            border: none;
-            border-radius: 10px;
-            color: #000;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-        }
-
-        .result-box {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            text-align: right;
-            margin-top: 15px;
-        }
-
-        .info-row {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .info-row label {
-            font-size: 14px;
-            color: #9ca3af;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-copy {
-            padding: 10px 15px;
-            font-size: 14px;
-            background: #374151;
-            color: #fff;
-        }
-
-        .btn-code {
-            width: 100%;
-            margin-top: 10px;
-            background: linear-gradient(45deg, #10b981, #059669);
-            color: #fff;
-        }
-
-        .code-display {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0, 242, 254, 0.05);
-            border: 1px dashed var(--primary-glow);
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .code-display input {
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: var(--primary-glow);
+        .lang-btn {
             background: transparent;
             border: none;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .lang-btn.active {
+            background: #eab308;
+            color: #030712;
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.5);
         }
 
-        .timer {
+        /* WhatsApp Circular Banner */
+        .whatsapp-banner {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            border: 1px solid #34d399;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        [dir="ltr"] .whatsapp-banner {
+            right: auto;
+            left: 15px;
+        }
+        .whatsapp-banner:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+        }
+        .whatsapp-banner svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        .db-logo {
+            width: 140px;
+            height: 120px;
+            margin-bottom: 12px;
+            position: relative;
+            cursor: pointer;
+            animation: ledPulse 2s infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #090803;
+            padding: 10px;
+            border-radius: 18px;
+        }
+
+        .db-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes ledPulse {
+            0% {
+                box-shadow: 0 0 12px #ca8a04, inset 0 0 8px #ca8a04;
+                border: 2px solid #ca8a04;
+            }
+            50% {
+                box-shadow: 0 0 25px #eab308, inset 0 0 15px #eab308;
+                border: 2px solid #fde047;
+                transform: scale(1.03);
+            }
+            100% {
+                box-shadow: 0 0 35px #a16207, inset 0 0 20px #a16207;
+                border: 2px solid #a16207;
+            }
+        }
+
+        .company-title {
+            font-size: 22px;
+            color: #f8fafc;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-family: 'Poppins', 'Noto Kufi Arabic', sans-serif;
+        }
+        .company-title span {
+            color: #eab308;
+            text-shadow: 0 0 12px rgba(234, 179, 8, 0.8);
+        }
+
+        .account-badge {
+            background: rgba(3, 7, 18, 0.9);
+            border: 1px solid #eab308;
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
+            padding: 5px 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .account-badge span {
             font-size: 13px;
-            color: #f59e0b;
-            margin-top: 5px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .account-badge input {
+            background: transparent;
+            border: none;
+            color: #fde047;
+            font-size: 15px;
+            font-weight: 700;
+            width: 75px;
+            outline: none;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
         }
 
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .warning-title {
+            color: #fca5a5;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+        }
+        .warning-text {
+            color: #fecaca;
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+        .accept-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            border: 1px solid #fca5a5;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            transition: all 0.2s ease;
+        }
+        .accept-btn:disabled {
+            background: #475569;
+            border-color: #64748b;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .loading, .error-msg {
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
         .error-msg {
+            color: #f87171;
+        }
+        
+        .field-group {
+            margin-bottom: 12px;
+            text-align: right;
+        }
+        [dir="ltr"] .field-group {
+            text-align: left;
+        }
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .input-with-copy {
+            display: flex;
+            align-items: center;
+            background: rgba(3, 7, 18, 0.8);
+            border: 1px solid #ca8a04;
+            box-shadow: 0 0 8px rgba(202, 138, 4, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .field-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: #e2e8f0;
+            outline: none;
+            width: 100%;
+            font-family: 'Poppins', 'Noto Kufi Arabic', sans-serif;
+        }
+        .copy-btn {
+            background: rgba(45, 36, 10, 0.8);
+            border: none;
+            padding: 0 14px;
+            cursor: pointer;
+            color: #fde047;
+            font-size: 12px;
+            font-weight: 700;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 38px;
+        }
+        [dir="ltr"] .copy-btn {
+            border-right: none;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .copy-btn:hover {
+            background: #ca8a04;
+            color: #ffffff;
+            box-shadow: 0 0 10px #ca8a04;
+        }
+        
+        .action-fetch-box {
+            margin: 14px 0;
+            background: rgba(3, 7, 18, 0.95);
+            border: 1.5px solid #eab308;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.25);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: right;
+        }
+        [dir="ltr"] .action-fetch-box {
+            text-align: left;
+        }
+        .action-fetch-box .field-label {
+            color: #fde047;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .fetch-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #ca8a04 0%, #854d0e 100%);
+            color: #ffffff;
+            border: 1px solid #fde047;
+            cursor: pointer;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(202, 138, 4, 0.4);
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .code-display-box {
+            background: #020617;
+            border: 1.5px solid #fde047;
+            box-shadow: 0 0 10px rgba(253, 224, 71, 0.3), inset 0 0 6px rgba(253, 224, 71, 0.15);
+            border-radius: 10px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .code-input-field {
+            background: transparent;
+            border: none;
+            color: #fde047;
+            font-size: 16px;
+            font-weight: 800;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            letter-spacing: 3px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .timer-text {
+            font-size: 10px;
             color: #ef4444;
+            text-align: center;
+            margin-top: 4px;
+            font-weight: 700;
+            min-height: 14px;
+        }
+
+        .show-modal-btn {
+            width: 100%;
+            background: rgba(30, 25, 10, 0.8);
+            border: 1.5px solid #eab308;
+            color: #fde047;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             margin-top: 15px;
-            display: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+        }
+        .show-modal-btn:hover {
+            background: #713f12;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-card {
+            background: rgba(15, 15, 18, 0.98);
+            border: 2px solid #fde047;
+            box-shadow: 0 0 25px rgba(253, 224, 71, 0.4);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+            text-align: right;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        [dir="ltr"] .modal-card {
+            text-align: left;
+        }
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+        .modal-title {
+            color: #fde047;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .close-modal-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="logo">AYAD PHONE</div>
+    <div class="container">
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('ku')">KU</button>
+            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('ar')">AR</button>
+        </div>
 
-    <div class="search-box">
-        <input type="text" id="accountInput" placeholder="ژمارەی ئەکاونت بنووسە...">
-        <button onclick="searchAccount()">گەڕان</button>
-    </div>
+        <!-- WhatsApp Circular Button -->
+        <a id="whatsappLink" href="#" target="_blank" class="whatsapp-banner" title="WhatsApp">
+            <svg viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+        </a>
 
-    <div class="error-msg" id="errorMsg"></div>
+        <!-- ABO Phone Logo -->
+        <div class="logo-container">
+            <div class="db-logo">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="25" y="15" width="75" height="135" rx="12" fill="none" stroke="#eab308" stroke-width="6"/>
+                    <rect x="52" y="22" width="20" height="5" rx="2" fill="#eab308"/>
+                    <path d="M 38 125 L 62 45 L 86 125 M 46 95 L 78 95 L 62 112" fill="none" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <path d="M 120 45 L 148 45 C 168 45 168 78 148 78 L 120 78 L 120 45 Z" fill="none" stroke="#fde047" stroke-width="7" stroke-linejoin="round"/>
+                    <path d="M 120 78 L 152 78 C 174 78 174 115 152 115 L 120 115 L 120 78 Z" fill="none" stroke="#fde047" stroke-width="7" stroke-linejoin="round"/>
+                    <circle cx="140" cy="62" r="4" fill="#fde047"/>
+                    <circle cx="143" cy="96" r="4" fill="#fde047"/>
 
-    <div class="result-box" id="resultBox">
-        <div class="info-row">
-            <label>ئیمەیڵ:</label>
-            <div class="input-group">
-                <input type="text" id="emailInput" readonly>
-                <button class="btn-copy" onclick="copyText('emailInput')">کۆپی</button>
+                    <circle cx="215" cy="80" r="32" fill="none" stroke="#fde047" stroke-width="7"/>
+                    <circle cx="215" cy="80" r="18" fill="none" stroke="#fde047" stroke-width="3" stroke-dasharray="4 2"/>
+
+                    <line x1="110" y1="123" x2="245" y2="123" stroke="#eab308" stroke-width="3"/>
+                    <text x="178" y="148" font-family="'Poppins', sans-serif" font-weight="800" font-size="22" fill="#fde047" text-anchor="middle" letter-spacing="2">Phone</text>
+                </svg>
+            </div>
+            <div class="company-title">ABO <span>PHONE</span></div>
+            
+            <div class="account-badge">
+                <span id="lblAccount">ئەکاونت:</span>
+                <input type="text" id="accSmallInput" value="" readonly>
             </div>
         </div>
 
-        <div class="info-row">
-            <label>وشەی تێپەڕ (Password):</label>
-            <div class="input-group">
-                <input type="text" id="passInput" readonly>
-                <button class="btn-copy" onclick="copyText('passInput')">کۆپی</button>
+        <!-- Warning Box -->
+        <div id="warningBox" class="warning-box">
+            <div id="warnTitle" class="warning-title">
+                ⚠️ ئاگادارییەکی گرنگ
             </div>
+            <div id="warnText" class="warning-text">
+                تکایە بەهیچ شێوەیەک ئەم Apple ID لە Settings ی موبایلەکەت داخل مەکە! تەنها لە App Store داخل بکە.<br><br>
+                <strong>تکایە کاتێک Apple ID داخل کرد ڕاستەوخۆ بیخەرە سەر ژمارەی موبایلی خۆت.</strong>
+            </div>
+            <button id="acceptBtn" class="accept-btn" disabled onclick="acceptAgreement()">
+                چاوەڕوان بە (5)...
+            </button>
         </div>
 
-        <div class="info-row">
-            <label>بەرواری لەدایکبوون:</label>
-            <input type="text" id="dobInput" readonly>
-        </div>
-
-        <div class="info-row">
-            <label>ژمارەی تلفۆن:</label>
-            <input type="text" id="phoneInput" readonly>
-        </div>
-
-        <button class="btn-code" onclick="requestCode()">وەرگرتنی کۆدی دڵنیایی</button>
-
-        <div class="code-display" id="codeSection" style="display: none;">
-            <input type="text" id="codeInput" readonly value="------">
-            <div class="timer" id="timerText"></div>
+        <div id="content" style="display: none;">
+            <div id="loadingText" class="loading">چاوەڕوان بە، زانیارییەکان دەهێنرێن...</div>
         </div>
     </div>
-</div>
 
-<script>
-    // ** ئەنتەر بکە لینکی APPS SCRIPTەکەت لێرە **
-    const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec";
+    <!-- Hidden Info Modal -->
+    <div id="infoModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div id="modalTitle" class="modal-title">🔐 زانیارییە شاراوەکان</div>
+                <button class="close-modal-btn" onclick="toggleModal(false)">✕</button>
+            </div>
+            
+            <div class="field-group">
+                <label id="lblBirthday" class="field-label">ڕۆژی لەدایکبوون (Birthday)</label>
+                <div class="input-with-copy">
+                    <input type="text" id="bdayInput" class="field-input" value="" readonly>
+                    <button id="btnCopyBday" class="copy-btn" onclick="copyText('bdayInput')">کۆپی</button>
+                </div>
+            </div>
 
-    let currentCodeLink = "";
-    let countdownTimer = null;
+            <div class="field-group">
+                <label id="lblPhone" class="field-label">ژمارەی تەلەفۆن (Phone)</label>
+                <div class="input-with-copy">
+                    <input type="text" id="phoneInput" class="field-input" value="" readonly>
+                    <button id="btnCopyPhone" class="copy-btn" onclick="copyText('phoneInput')">کۆپی</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function searchAccount() {
-        const account = document.getElementById('accountInput').value.trim();
-        const errorMsg = document.getElementById('errorMsg');
-        const resultBox = document.getElementById('resultBox');
+    <div id="toast" class="toast">بە سەرکەوتوویی کۆپی کرا!</div>
 
-        if (!account) {
-            errorMsg.innerText = "تکایە ژمارەی ئەکاونت بنووسە";
-            errorMsg.style.display = "block";
-            resultBox.style.display = "none";
-            return;
+    <script>
+        const translations = {
+            ku: {
+                dir: "rtl",
+                lblAccount: "ئەکاونت:",
+                warnTitle: "⚠️ ئاگادارییەکی گرنگ",
+                warnText: "تکایە بەهیچ شێوەیەک ئەم Apple ID لە Settings ی موبایلەکەت داخل مەکە! تەنها لە App Store داخل بکە.<br><br><strong>تکایە کاتێک Apple ID داخل کرد ڕاستەوخۆ بیخەرە سەر ژمارەی موبایلی خۆت.</strong>",
+                btnWait: "چاوەڕوان بە ({s})...",
+                btnAgree: "من ڕازیم",
+                loading: "چاوەڕوان بە، زانیارییەکان دەهێنرێن...",
+                errNoAcc: "تکایە ژمارەی ئەکاونت لە لینکەکەدا دیاری بکە (نموونە: ?account=1)",
+                lblEmail: "ئیمەیل (Email)",
+                lblPass: "پاسوۆرد (Password)",
+                lblCode: "کۆدی دڵنیایی",
+                btnGetCode: "وەرگرتنی کۆدی دڵنیایی",
+                btnShowHidden: "👁️ پێشان دانی زانیارییە شاراوەکان (روز / ژمارە)",
+                modalTitle: "🔐 زانیارییە شاراوەکان",
+                lblBday: "ڕۆژی لەدایکبوون (Birthday)",
+                lblPhone: "ژمارەی تەلەفۆن (Phone)",
+                btnCopy: "کۆپی",
+                toastCopied: "بە سەرکەوتوویی کۆپی کرا!",
+                codeNoLink: "لینک نییە",
+                codeNotFound: "نەدۆزرایەوە",
+                codeErr: "هەڵە",
+                codeTimer: "کۆدەکە دوای {s} چرکەی تر دەسڕێتەوە",
+                codeExpired: "کۆدەکە سڕایەوە! کۆتایی هات."
+            },
+            en: {
+                dir: "ltr",
+                lblAccount: "Account:",
+                warnTitle: "⚠️ Important Notice",
+                warnText: "Please DO NOT sign in with this Apple ID in device Settings! Only sign in through the App Store.<br><br><strong>Once signed in, immediately link it to your own phone number.</strong>",
+                btnWait: "Please wait ({s})...",
+                btnAgree: "I Agree",
+                loading: "Please wait, fetching data...",
+                errNoAcc: "Please specify an account number in the URL (e.g. ?account=1)",
+                lblEmail: "Email",
+                lblPass: "Password",
+                lblCode: "Verification Code",
+                btnGetCode: "Get Verification Code",
+                btnShowHidden: "👁️ Show Hidden Info (Birthday / Phone)",
+                modalTitle: "🔐 Hidden Information",
+                lblBday: "Birthday",
+                lblPhone: "Phone Number",
+                btnCopy: "Copy",
+                toastCopied: "Copied successfully!",
+                codeNoLink: "No Link",
+                codeNotFound: "Not Found",
+                codeErr: "Error",
+                codeTimer: "Code expires in {s} seconds",
+                codeExpired: "Code expired!"
+            },
+            ar: {
+                dir: "rtl",
+                lblAccount: "الحساب:",
+                warnTitle: "⚠️ تنبيه هام جداً",
+                warnText: "الرجاء عدم تسجيل الدخول بـ Apple ID في إعدادات الهاتف (Settings)! استخدمه في App Store فقط.<br><br><strong>عند تسجيل الدخول، يرجى ربطه برقم هاتفك الشخصي فوراً.</strong>",
+                btnWait: "انتظر قليلاً ({s})...",
+                btnAgree: "أنا أوافق",
+                loading: "جاري تحميل البيانات، يرجى الانتظار...",
+                errNoAcc: "يرجى تحديد رقم الحساب في الرابط (مثال: ?account=1)",
+                lblEmail: "البريد الإلكتروني (Email)",
+                lblPass: "كلمة السر (Password)",
+                lblCode: "رمز التحقق",
+                btnGetCode: "الحصول على رمز التحقق",
+                btnShowHidden: "👁️ إظهار المعلومات المخفية (التاريخ / الرقم)",
+                modalTitle: "🔐 المعلومات المخفية",
+                lblBday: "تاريخ الميلاد (Birthday)",
+                lblPhone: "رقم الهاتف (Phone)",
+                btnCopy: "نسخ",
+                toastCopied: "تم النسخ بنجاح!",
+                codeNoLink: "لا يوجد رابط",
+                codeNotFound: "غير موجود",
+                codeErr: "خطأ",
+                codeTimer: "سيتم حذف الرمز خلال {s} ثانية",
+                codeExpired: "انتهت صلاحية الرمز!"
+            }
+        };
+
+        let currentLang = 'ku';
+        const urlParams = new URLSearchParams(window.location.search);
+        const accountNumber = urlParams.get('account');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxBs9hot2zu7R9Ndz3ggEaurcW1vkEgRqF1LDyjtowxBs2z4vZYrow_dv9Nnw5tFxWK/exec';
+        let countdownTimer = null;
+        let fetchedData = null;
+        let waitTime = 5;
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            document.documentElement.dir = t.dir;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
+            });
+
+            document.getElementById('lblAccount').innerText = t.lblAccount;
+            document.getElementById('warnTitle').innerText = t.warnTitle;
+            document.getElementById('warnText').innerHTML = t.warnText;
+            document.getElementById('modalTitle').innerText = t.modalTitle;
+            document.getElementById('lblBirthday').innerText = t.lblBday;
+            document.getElementById('lblPhone').innerText = t.lblPhone;
+            document.getElementById('btnCopyBday').innerText = t.btnCopy;
+            document.getElementById('btnCopyPhone').innerText = t.btnCopy;
+            document.getElementById('toast').innerText = t.toastCopied;
+
+            if (waitTime > 0) {
+                document.getElementById('acceptBtn').innerText = t.btnWait.replace('{s}', waitTime);
+            } else {
+                document.getElementById('acceptBtn').innerText = t.btnAgree;
+            }
+
+            if (fetchedData) {
+                renderData(fetchedData);
+            }
         }
 
-        errorMsg.style.display = "none";
+        if (accountNumber) {
+            document.getElementById('accSmallInput').value = accountNumber;
+            const phone = "9647507539339";
+            const message = encodeURIComponent(`Hello, I have account number ${accountNumber} at ABO PHONE.`);
+            document.getElementById('whatsappLink').href = `https://wa.me/${phone}?text=${message}`;
 
-        fetch(`${scriptURL}?account=${encodeURIComponent(account)}`)
-            .then(res => res.json())
-            .then(response => {
-                if (response.status === "success") {
-                    const data = response.data;
-                    document.getElementById('emailInput').value = data.email || '';
-                    document.getElementById('passInput').value = data.password || '';
-                    document.getElementById('dobInput').value = data.birthday || '';
-                    document.getElementById('phoneInput').value = data.phone || '';
-
-                    currentCodeLink = data.link || data.codeLink || "";
-
-                    document.getElementById('codeSection').style.display = 'none';
-                    document.getElementById('codeInput').value = '------';
-                    document.getElementById('timerText').innerText = '';
-                    if (countdownTimer) clearInterval(countdownTimer);
-
-                    resultBox.style.display = "flex";
-                } else {
-                    errorMsg.innerText = response.message || "ئەکاونتەکە نەدۆزرایەوە";
-                    errorMsg.style.display = "block";
-                    resultBox.style.display = "none";
-                }
-            })
-            .catch(err => {
-                errorMsg.innerText = "کێشەیەک لە پەیوەندی هەبوو";
-                errorMsg.style.display = "block";
-                resultBox.style.display = "none";
-            });
-    }
-
-    function requestCode() {
-        const codeSection = document.getElementById('codeSection');
-        const codeInput = document.getElementById('codeInput');
-        const timerText = document.getElementById('timerText');
-
-        codeSection.style.display = 'block';
-
-        if (!currentCodeLink || currentCodeLink.trim() === '') {
-            codeInput.value = "لینک نییە";
-            timerText.innerText = '';
-            return;
+            fetch(`${scriptURL}?account=${accountNumber}`)
+                .then(response => response.json())
+                .then(res => {
+                    fetchedData = res;
+                })
+                .catch(err => {
+                    fetchedData = { status: 'error', message: 'Connection Error / هەڵە لە پەیوەندی' };
+                });
         }
 
-        codeInput.value = "کۆد دەهێنرێت...";
-        timerText.innerText = '';
+        const acceptBtn = document.getElementById('acceptBtn');
+        const waitTimer = setInterval(() => {
+            waitTime--;
+            const t = translations[currentLang];
+            if (waitTime > 0) {
+                acceptBtn.innerText = t.btnWait.replace('{s}', waitTime);
+            } else {
+                clearInterval(waitTimer);
+                acceptBtn.innerText = t.btnAgree;
+                acceptBtn.disabled = false;
+            }
+        }, 1000);
 
-        if (countdownTimer) clearInterval(countdownTimer);
+        function acceptAgreement() {
+            document.getElementById('warningBox').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
 
-        // بەکارهێنانی پرۆکسی بۆ چارەسەرکردنی کێشەی HTTP و CORS
-        let targetUrl = currentCodeLink.trim();
-        let proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+            const t = translations[currentLang];
+            if (!accountNumber) {
+                document.getElementById('content').innerHTML = `<div class="error-msg">${t.errNoAcc}</div>`;
+                return;
+            }
 
-        fetch(proxyUrl)
-            .then(res => {
-                if (!res.ok) throw new Error("Network response was not ok");
-                return res.text();
-            })
-            .then(text => {
-                // دۆزینەوەی کۆدی 4 تا 6 ڕەقەمی
-                const match = text.match(/\b\d{4,6}\b/);
-                if (match) {
-                    codeInput.value = match[0];
-                    let timeLeft = 60;
-                    timerText.innerText = `کۆدەکە پاش ${timeLeft} چڕکە بەسەر دەچێت`;
+            if (fetchedData) {
+                renderData(fetchedData);
+            } else {
+                const checkInterval = setInterval(() => {
+                    if (fetchedData) {
+                        clearInterval(checkInterval);
+                        renderData(fetchedData);
+                    }
+                }, 200);
+            }
+        }
 
-                    countdownTimer = setInterval(() => {
-                        timeLeft--;
-                        if (timeLeft > 0) {
-                            timerText.innerText = `کۆدەکە پاش ${timeLeft} چڕکە بەسەر دەچێت`;
-                        } else {
-                            clearInterval(countdownTimer);
-                            codeInput.value = '------';
-                            timerText.innerText = 'کۆدەکە بەسەرچوو';
-                        }
-                    }, 1000);
+        function renderData(res) {
+            const t = translations[currentLang];
+            if (res.status === 'success') {
+                let d = res.data;
+                
+                document.getElementById('bdayInput').value = d.birthday || '';
+                document.getElementById('phoneInput').value = d.phone || '';
+
+                document.getElementById('content').innerHTML = `
+                    <div class="field-group">
+                        <label class="field-label">${t.lblEmail}</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="emailInput" class="field-input" value="${d.email || ''}" readonly>
+                            <button class="copy-btn" onclick="copyText('emailInput')">${t.btnCopy}</button>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">${t.lblPass}</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="passInput" class="field-input" value="${d.password || ''}" readonly>
+                            <button class="copy-btn" onclick="copyText('passInput')">${t.btnCopy}</button>
+                        </div>
+                    </div>
+
+                    <div class="action-fetch-box">
+                        <label class="field-label">${t.lblCode}</label>
+                        
+                        <div class="code-display-box">
+                            <input type="text" id="fetchedResultInput" class="code-input-field" value="" placeholder="------" readonly>
+                            <button class="copy-btn" style="border-radius: 6px; min-height: 28px; padding: 0 10px; font-size: 11px;" onclick="copyText('fetchedResultInput')">${t.btnCopy}</button>
+                        </div>
+                        <div id="timerNotice" class="timer-text"></div>
+
+                        <button class="fetch-btn" onclick="fetchTargetLink('${d.link || ''}')">${t.btnGetCode}</button>
+                    </div>
+
+                    <button class="show-modal-btn" onclick="toggleModal(true)">
+                        ${t.btnShowHidden}
+                    </button>
+                `;
+            } else {
+                document.getElementById('content').innerHTML = `<div class="error-msg">${res.message}</div>`;
+            }
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('infoModal');
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
+        function playBeepSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {
+                console.log('Audio Context error:', e);
+            }
+        }
+
+        function fetchTargetLink(targetUrl) {
+            const t = translations[currentLang];
+            const resultInput = document.getElementById('fetchedResultInput');
+            const timerNotice = document.getElementById('timerNotice');
+            
+            if (!targetUrl) {
+                resultInput.value = t.codeNoLink;
+                return;
+            }
+
+            resultInput.value = "...";
+            if (countdownTimer) clearInterval(countdownTimer);
+            timerNotice.innerText = "";
+
+            fetch(targetUrl)
+                .then(response => response.text())
+                .then(htmlText => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+                    const codeElement = doc.querySelector('p font[size="6"] font');
+
+                    if (codeElement && codeElement.innerText.trim()) {
+                        const code = codeElement.innerText.trim();
+                        resultInput.value = code;
+                        playBeepSound();
+                        startCodeTimer(60);
+                    } else {
+                        resultInput.value = t.codeNotFound;
+                    }
+                })
+                .catch(err => {
+                    resultInput.value = t.codeErr;
+                });
+        }
+
+        function startCodeTimer(seconds) {
+            let left = seconds;
+            const timerNotice = document.getElementById('timerNotice');
+            const resultInput = document.getElementById('fetchedResultInput');
+
+            if (countdownTimer) clearInterval(countdownTimer);
+
+            countdownTimer = setInterval(() => {
+                const t = translations[currentLang];
+                if (left > 0) {
+                    timerNotice.innerText = t.codeTimer.replace('{s}', left);
+                    left--;
                 } else {
-                    codeInput.value = "کۆدەکە نەدۆزرایەوە";
+                    clearInterval(countdownTimer);
+                    resultInput.value = "------";
+                    timerNotice.innerText = t.codeExpired;
                 }
-            })
-            .catch(err => {
-                // لە حاڵەتی کێشەدا، پرۆکسی دووەم تاقی دەکاتەوە
-                fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl))
-                    .then(r => r.text())
-                    .then(tData => {
-                        const match2 = tData.match(/\b\d{4,6}\b/);
-                        if (match2) {
-                            codeInput.value = match2[0];
-                        } else {
-                            codeInput.value = "کۆدەکە نەدۆزرایەوە";
-                        }
-                    })
-                    .catch(() => {
-                        codeInput.value = "کێشە لە هێنانی کۆد";
-                    });
+            }, 1000);
+        }
+
+        function copyText(inputId) {
+            const inputElem = document.getElementById(inputId);
+            if (!inputElem || !inputElem.value || inputElem.value === '...' || inputElem.value === '------') return;
+
+            inputElem.select();
+            inputElem.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(inputElem.value).then(() => {
+                showToast();
+            }).catch(() => {
+                document.execCommand('copy');
+                showToast();
             });
-    }
+        }
 
-    function copyText(id) {
-        const input = document.getElementById(id);
-        input.select();
-        document.execCommand('copy');
-    }
-</script>
-
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
