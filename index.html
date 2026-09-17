@@ -2,80 +2,53 @@
 <html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دەرهێنانی کۆدی ٦ ژمارەیی</title>
+    <title>هێنانی کۆدی ٦ ژمارەیی</title>
     <style>
-        body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; text-align: right; }
-        .container { max-width: 500px; margin: 40px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
-        h2 { color: #333; margin-bottom: 20px; }
-        button { background-color: #007bff; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        button:hover { background-color: #0056b3; }
-        #status { margin-top: 15px; font-size: 14px; color: #666; }
-        .code-box { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 8px; font-size: 38px; font-family: monospace; font-weight: bold; color: #28a745; letter-spacing: 5px; direction: ltr; min-height: 45px; }
+        body { font-family: Tahoma, sans-serif; background: #f4f6f8; text-align: center; padding-top: 50px; }
+        .card { background: white; max-width: 400px; margin: auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        button { background: #007bff; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
+        .code { font-size: 40px; font-weight: bold; color: #28a745; margin-top: 15px; letter-spacing: 4px; font-family: monospace; }
+        #status { font-size: 13px; color: #666; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="card">
     <h2>کۆدی ٦ ژمارەیی</h2>
-    
-    <button onclick="getFastCode()">هێنانی کۆد بە خێرایی</button>
-    
+    <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
     <div id="status">داگرتنی دوگمەکە بکە...</div>
-    
-    <div class="code-box" id="codeDisplay">------</div>
+    <div class="code" id="result">------</div>
 </div>
 
 <script>
-    // فەنکشنێک بۆ وەرگرتنی زانیاری لە یەک سێرڤەر بە دیاریکردنی کاتی بەسەرچوو (Timeout)
-    async function fetchWithTimeout(url, timeout = 3000) {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(id);
-        
-        if (!response.ok) throw new Error('فەشەلی هێنا');
-        return await response.text();
-    }
-
-    async function getFastCode() {
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
-        const timestamp = new Date().getTime();
-        
+    async function getCode() {
+        const resultDiv = document.getElementById('result');
         const statusDiv = document.getElementById('status');
-        const codeDisplay = document.getElementById('codeDisplay');
+        
+        // ڕاستەوخۆ دەچێت بۆ لینکەکە بێ هیچ پرۆکسییەک (زۆر خێرا)
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + new Date().getTime();
 
-        statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە بە خێرایی...';
-        statusDiv.style.color = '#007bff';
-        codeDisplay.innerText = '......';
-
-        // لیستی سێرڤەرەکان بە کاتی سەرچووی ڕاستەوخۆ
-        const endpoints = [
-            'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl + '&_t=' + timestamp),
-            'https://corsproxy.io/?' + encodeURIComponent(targetUrl + '&_t=' + timestamp),
-            'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl + '&_t=' + timestamp)
-        ];
+        statusDiv.innerText = 'لە پەیوەندیدایە...';
+        resultDiv.innerText = '......';
 
         try {
-            // بەکارهێنانی Promise.any بۆ وەرگرتنی یەکەم وەڵام کە دەگات (ڕکابەری لە نێوان سێرڤەرەکان)
-            const rawText = await Promise.any(endpoints.map(url => fetchWithTimeout(url, 3500)));
+            const response = await fetch(targetUrl);
+            const text = await response.text();
             
-            // دروستکردنی کۆدی ٦ ژمارەیی
-            const match = rawText.match(/\b\d{6}\b/);
-
+            // جوداکردنەوەی ٦ ژمارەکە
+            const match = text.match(/\b\d{6}\b/);
+            
             if (match) {
-                codeDisplay.innerText = match[0];
+                resultDiv.innerText = match[0];
                 statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
                 statusDiv.style.color = 'green';
             } else {
-                codeDisplay.innerText = rawText.trim();
-                statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە، ئەمە دەقەکەیە:';
-                statusDiv.style.color = 'orange';
+                resultDiv.innerText = text;
+                statusDiv.innerText = 'دەقەکە وەگیرا، بەڵام ٦ ژمارە تێیدا نەبوو!';
             }
-        } catch (error) {
-            codeDisplay.innerText = 'ERROR';
-            statusDiv.innerText = 'پەیوەندییەکە خاو بوو یان ئینتەرنێت کێشەی هەبوو!';
+        } catch (err) {
+            resultDiv.innerText = 'ERROR';
+            statusDiv.innerText = 'ڕێگری CORS ڕوویدا! تکایە زیادکراوی Allow CORS چالاک بکە لە وێبگەڕەکەت.';
             statusDiv.style.color = 'red';
         }
     }
