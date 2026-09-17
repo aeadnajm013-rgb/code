@@ -2,56 +2,68 @@
 <html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دەرهێنانی کۆد</title>
     <style>
         body { font-family: Tahoma, sans-serif; background: #f4f6f8; text-align: center; padding-top: 50px; }
-        .card { background: white; max-width: 400px; margin: auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        button { background: #28a745; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        button:hover { background: #218838; }
-        .code { font-size: 40px; font-weight: bold; color: #007bff; margin-top: 15px; letter-spacing: 4px; font-family: monospace; }
+        .card { background: white; max-width: 450px; margin: auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        button { background: #007bff; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .code { font-size: 40px; font-weight: bold; color: #28a745; margin-top: 20px; letter-spacing: 4px; font-family: monospace; }
         #status { font-size: 14px; color: #666; margin-top: 10px; }
+        iframe { width: 0; height: 0; border: 0; visibility: hidden; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>کۆدی ٦ ژمارەیی</h2>
-    <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
-    <div id="status">کلیک لە دوگمەکە بکە...</div>
+    <button onclick="loadCode()">نوێکردنەوە و هێنانی کۆد</button>
+    <div id="status">داگرتنی دوگمەکە بکە...</div>
     <div class="code" id="result">------</div>
 </div>
 
+<!-- iframe شاراوە بۆ بارکردنی لینکەکە بێ کێشەی CORS -->
+<iframe id="dataFrame"></iframe>
+
 <script>
-    async function getCode() {
+    function loadCode() {
         const resultDiv = document.getElementById('result');
         const statusDiv = document.getElementById('status');
-        
-        // پەیوەندی ڕاستەوخۆ بە سێرڤەرەکە بەبێ Proxy
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + Date.now();
+        const iframe = document.getElementById('dataFrame');
 
         statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە...';
+        statusDiv.style.color = '#007bff';
         resultDiv.innerText = '......';
 
-        try {
-            const response = await fetch(targetUrl);
-            const text = await response.text();
-            
-            const match = text.match(/\b\d{6}\b/);
-            
-            if (match) {
-                resultDiv.innerText = match[0];
-                statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
-                statusDiv.style.color = 'green';
-            } else {
-                resultDiv.innerText = text.trim() || 'دەق بەتاڵە';
-                statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە!';
-                statusDiv.style.color = 'orange';
+        // بارکردنی لینکەکە لە ناو iframe
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + Date.now();
+        iframe.src = targetUrl;
+
+        iframe.onload = function() {
+            try {
+                // خوێندنەوەی دەقی ناو iframe
+                const text = iframe.contentDocument.body.innerText || iframe.contentDocument.body.textContent;
+                
+                // دەرهێنانی ٦ ژمارەکە
+                const match = text.match(/\b\d{6}\b/);
+
+                if (match) {
+                    resultDiv.innerText = match[0];
+                    statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
+                    statusDiv.style.color = 'green';
+                } else {
+                    resultDiv.innerText = text.trim() || 'دەق بەتاڵە';
+                    statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە لە ناو دەقەکەدا!';
+                    statusDiv.style.color = 'orange';
+                }
+            } catch (e) {
+                // ئەگەر iframe بلۆک کرا لەلایەن وێبگەڕەکەوە
+                resultDiv.innerText = 'کێشەی ئاسایش';
+                statusDiv.innerText = 'وێبگەڕەکەت ڕێگەی نەدا ڕاستەوخۆ دەقەکە بخوێنرێتەوە.';
+                statusDiv.style.color = 'red';
             }
-        } catch (err) {
-            resultDiv.innerText = 'ERROR';
-            statusDiv.innerText = 'تکایە دڵنیا ببەوە لەوەی زیادکراوی Allow CORS لە وێبگەڕەکەت چالاکە!';
-            statusDiv.style.color = 'red';
-        }
+        };
     }
 </script>
 
