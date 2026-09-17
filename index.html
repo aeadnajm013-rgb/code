@@ -8,10 +8,10 @@
         body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; text-align: right; }
         .container { max-width: 500px; margin: 40px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
         h2 { color: #333; margin-bottom: 20px; }
-        button { background-color: #28a745; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.2s; }
-        button:hover { background-color: #218838; }
+        button { background-color: #007bff; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
         #status { margin-top: 15px; font-size: 14px; color: #666; }
-        .code-box { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 8px; font-size: 36px; font-family: monospace; font-weight: bold; color: #007bff; letter-spacing: 5px; direction: ltr; min-height: 45px; }
+        .code-box { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 8px; font-size: 38px; font-family: monospace; font-weight: bold; color: #28a745; letter-spacing: 5px; direction: ltr; min-height: 45px; }
     </style>
 </head>
 <body>
@@ -19,74 +19,63 @@
 <div class="container">
     <h2>کۆدی ٦ ژمارەیی</h2>
     
-    <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
+    <button onclick="getFastCode()">هێنانی کۆد بە خێرایی</button>
     
-    <div id="status">کلیک لە دوگمەکە بکە بۆ هێنانی کۆدی نوێ</div>
+    <div id="status">داگرتنی دوگمەکە بکە...</div>
     
     <div class="code-box" id="codeDisplay">------</div>
 </div>
 
 <script>
-    async function getCode() {
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
+    // فەنکشنێک بۆ وەرگرتنی زانیاری لە یەک سێرڤەر بە دیاریکردنی کاتی بەسەرچوو (Timeout)
+    async function fetchWithTimeout(url, timeout = 3000) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
         
-        // لیستێک لە ٤ سێرڤەری پرۆکسی جیاواز بۆ ئەوەی ئەگەر یەکێکیان کاری نەکرد ئەوی تر بەکاری بهێنێت
-        const proxies = [
-            'https://api.allorigins.win/raw?url=',
-            'https://corsproxy.io/?',
-            'https://thingproxy.freeboard.io/fetch/',
-            'https://api.codetabs.com/v1/proxy?quest='
-        ];
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(id);
+        
+        if (!response.ok) throw new Error('فەشەلی هێنا');
+        return await response.text();
+    }
 
+    async function getFastCode() {
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
+        const timestamp = new Date().getTime();
+        
         const statusDiv = document.getElementById('status');
         const codeDisplay = document.getElementById('codeDisplay');
 
-        statusDiv.innerText = 'لە هەوڵی هێنانی کۆدەکەدایە...';
+        statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە بە خێرایی...';
         statusDiv.style.color = '#007bff';
         codeDisplay.innerText = '......';
 
-        let rawText = '';
-        let success = false;
+        // لیستی سێرڤەرەکان بە کاتی سەرچووی ڕاستەوخۆ
+        const endpoints = [
+            'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl + '&_t=' + timestamp),
+            'https://corsproxy.io/?' + encodeURIComponent(targetUrl + '&_t=' + timestamp),
+            'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl + '&_t=' + timestamp)
+        ];
 
-        // تاقیکردنەوەی پرۆکسییەکان یەک بە دوای یەک
-        for (let proxy of proxies) {
-            try {
-                // زیadded Cache-Busting (t=...) بۆ ئەوەی هەمیشە زانیاری نوێ لە لینکەکە بهێنێت نەک کۆنەکە
-                const fetchUrl = proxy + encodeURIComponent(targetUrl + '&_t=' + new Date().getTime());
-                const response = await fetch(fetchUrl);
-                
-                if (response.ok) {
-                    rawText = await response.text();
-                    if (rawText && rawText.trim() !== '') {
-                        success = true;
-                        break; // ئەگەر سەرکەوتوو بوو، ئیتر پرۆکسییەکانی تر تاقی ناکاتەوە
-                    }
-                }
-            } catch (e) {
-                // ئەگەر ئەمەیان فەشەلی هێنا، دەچێتە سەر پرۆکسی دوای ئەوە
-                continue;
-            }
-        }
-
-        if (success) {
-            // بەکارهێنانی Regex بۆ دۆزینەوەی یەکەم زنجیرەی ٦ ژمارەیی لە ناو دەقەکەدا
+        try {
+            // بەکارهێنانی Promise.any بۆ وەرگرتنی یەکەم وەڵام کە دەگات (ڕکابەری لە نێوان سێرڤەرەکان)
+            const rawText = await Promise.any(endpoints.map(url => fetchWithTimeout(url, 3500)));
+            
+            // دروستکردنی کۆدی ٦ ژمارەیی
             const match = rawText.match(/\b\d{6}\b/);
 
             if (match) {
-                codeDisplay.innerText = match[0]; // تەنها ٦ ژمارەکە دەخاتە سندوقەکەوە
-                statusDiv.innerText = 'کۆدەکە بەسەرکەوتوویی وەرگیرا!';
+                codeDisplay.innerText = match[0];
+                statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
                 statusDiv.style.color = 'green';
             } else {
-                // ئەگەر ژمارەی ٦ دەنکی نەبوو، هەموو دەقەکە پیشان دەدات بۆ ئەوەی بزانیت چی گەڕاوەتەوە
-                codeDisplay.style.fontSize = '16px';
-                codeDisplay.innerText = rawText;
-                statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە لە ناو دەقەکەدا!';
+                codeDisplay.innerText = rawText.trim();
+                statusDiv.innerText = 'ژمارەی ٦ دەنکی نەدۆزرایەوە، ئەمە دەقەکەیە:';
                 statusDiv.style.color = 'orange';
             }
-        } else {
-            codeDisplay.style.fontSize = '36px';
+        } catch (error) {
             codeDisplay.innerText = 'ERROR';
-            statusDiv.innerText = 'نەتوانرا پەیوەندی بە لینکەکەوە بکرێت! دووبارە تاقی بکەرەوە.';
+            statusDiv.innerText = 'پەیوەندییەکە خاو بوو یان ئینتەرنێت کێشەی هەبوو!';
             statusDiv.style.color = 'red';
         }
     }
