@@ -2,53 +2,127 @@
 <html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>هێنانی کۆدی ٦ ژمارەیی</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دەرهێنانی کۆد</title>
     <style>
-        body { font-family: Tahoma, sans-serif; background: #f4f6f8; text-align: center; padding-top: 50px; }
-        .card { background: white; max-width: 400px; margin: auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        button { background: #007bff; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
-        .code { font-size: 40px; font-weight: bold; color: #28a745; margin-top: 15px; letter-spacing: 4px; font-family: monospace; }
-        #status { font-size: 13px; color: #666; margin-top: 10px; }
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .card {
+            max-width: 450px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .code-box {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #1e293b;
+            border-radius: 8px;
+            font-size: 42px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #38d9a9;
+            letter-spacing: 6px;
+            direction: ltr;
+            min-height: 50px;
+        }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>کۆدی ٦ ژمارەیی</h2>
+    
     <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
-    <div id="status">داگرتنی دوگمەکە بکە...</div>
-    <div class="code" id="result">------</div>
+    
+    <div id="status">کلیک لە دوگمەکە بکە...</div>
+    
+    <div class="code-box" id="codeDisplay">------</div>
 </div>
 
 <script>
     async function getCode() {
-        const resultDiv = document.getElementById('result');
-        const statusDiv = document.getElementById('status');
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
         
-        // ڕاستەوخۆ دەچێت بۆ لینکەکە بێ هیچ پرۆکسییەک (زۆر خێرا)
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + new Date().getTime();
+        // بەکارهێنانی سێرڤەری Cloudflare Corsproxy ڕاستەوخۆ
+        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl + '&_t=' + Date.now());
 
-        statusDiv.innerText = 'لە پەیوەندیدایە...';
-        resultDiv.innerText = '......';
+        const statusDiv = document.getElementById('status');
+        const codeDisplay = document.getElementById('codeDisplay');
+
+        statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە...';
+        statusDiv.style.color = '#007bff';
+        codeDisplay.innerText = '......';
+
+        // دانانی کاتی بەسەرچوون (Timeout) بۆ ٥ چرکە
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         try {
-            const response = await fetch(targetUrl);
-            const text = await response.text();
-            
-            // جوداکردنەوەی ٦ ژمارەکە
-            const match = text.match(/\b\d{6}\b/);
-            
+            const response = await fetch(proxyUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error('کێشە لە سێرڤەرەکەیە');
+            }
+
+            const rawText = await response.text();
+
+            // بژارکردنی دەقەکە بۆ دەرهێنانی تەنها ٦ ژمارەکە
+            const match = rawText.match(/\b\d{6}\b/);
+
             if (match) {
-                resultDiv.innerText = match[0];
+                codeDisplay.style.fontSize = '42px';
+                codeDisplay.innerText = match[0];
                 statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
                 statusDiv.style.color = 'green';
             } else {
-                resultDiv.innerText = text;
-                statusDiv.innerText = 'دەقەکە وەگیرا، بەڵام ٦ ژمارە تێیدا نەبوو!';
+                codeDisplay.style.fontSize = '18px';
+                codeDisplay.innerText = rawText.trim() || 'دەق بەتاڵە';
+                statusDiv.innerText = 'ژمارەی ٦ دەنکی لە دەقەکەدا نەبوو:';
+                statusDiv.style.color = 'orange';
             }
-        } catch (err) {
-            resultDiv.innerText = 'ERROR';
-            statusDiv.innerText = 'ڕێگری CORS ڕوویدا! تکایە زیادکراوی Allow CORS چالاک بکە لە وێبگەڕەکەت.';
+
+        } catch (error) {
+            codeDisplay.style.fontSize = '30px';
+            codeDisplay.innerText = 'ERROR';
+            
+            if (error.name === 'AbortError') {
+                statusDiv.innerText = 'کاتەکە بەسەرچوو، سێرڤەرەکە درەنگ وەڵامی دایەوە!';
+            } else {
+                statusDiv.innerText = 'نەتوانرا زانیاری بهێنرێت، دووبارە تاقی بکەرەوە.';
+            }
             statusDiv.style.color = 'red';
         }
     }
