@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABO PHONE - Account Info</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>COMPANY DU BRA - زانیاری ئەکاونت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -15,7 +15,7 @@
         
         body {
             background: #030712;
-            background: radial-gradient(circle at top, #141000 0%, #030712 100%);
+            background: radial-gradient(circle at top, #0f172a 0%, #030712 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,11 +23,11 @@
             padding: 20px;
         }
         .container {
-            background: rgba(15, 15, 18, 0.95);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 2px solid #eab308;
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.25);
+            border: 2px solid #2563eb;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
             width: 100%;
             max-width: 440px;
             border-radius: 28px;
@@ -37,48 +37,13 @@
             position: relative;
         }
 
-        /* Language Switcher */
-        .lang-switcher {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            gap: 4px;
-            background: rgba(3, 7, 18, 0.8);
-            padding: 3px;
-            border-radius: 20px;
-            border: 1px solid #ca8a04;
-            z-index: 10;
-        }
-        [dir="ltr"] .lang-switcher {
-            left: auto;
-            right: 15px;
-        }
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-        .lang-btn.active {
-            background: #eab308;
-            color: #030712;
-            box-shadow: 0 0 8px rgba(234, 179, 8, 0.5);
-        }
-
-        /* WhatsApp Circular Banner */
+        /* دوگمەی واتساپی بازنەیی */
         .whatsapp-banner {
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 38px;
-            height: 38px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,17 +56,13 @@
             transition: all 0.3s ease;
             z-index: 10;
         }
-        [dir="ltr"] .whatsapp-banner {
-            right: auto;
-            left: 15px;
-        }
         .whatsapp-banner:hover {
             transform: scale(1.1);
             box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
         }
         .whatsapp-banner svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: #ffffff;
         }
         
@@ -109,13 +70,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 25px;
+            margin-top: 5px;
             margin-bottom: 20px;
         }
 
         .db-logo {
-            width: 140px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
             margin-bottom: 12px;
             position: relative;
             cursor: pointer;
@@ -123,9 +85,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #090803;
-            padding: 10px;
-            border-radius: 18px;
+            background: #030712;
+            padding: 2px;
         }
 
         .db-logo svg {
@@ -135,37 +96,37 @@
 
         @keyframes ledPulse {
             0% {
-                box-shadow: 0 0 12px #ca8a04, inset 0 0 8px #ca8a04;
-                border: 2px solid #ca8a04;
+                box-shadow: 0 0 12px #2563eb, inset 0 0 8px #2563eb;
+                border: 2px solid #2563eb;
             }
             50% {
-                box-shadow: 0 0 25px #eab308, inset 0 0 15px #eab308;
-                border: 2px solid #fde047;
+                box-shadow: 0 0 25px #3b82f6, inset 0 0 15px #3b82f6;
+                border: 2px solid #60a5fa;
                 transform: scale(1.03);
             }
             100% {
-                box-shadow: 0 0 35px #a16207, inset 0 0 20px #a16207;
-                border: 2px solid #a16207;
+                box-shadow: 0 0 35px #1d4ed8, inset 0 0 20px #1d4ed8;
+                border: 2px solid #1d4ed8;
             }
         }
 
         .company-title {
-            font-size: 22px;
+            font-size: 19px;
             color: #f8fafc;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 10px;
             font-family: 'Poppins', 'Noto Kufi Arabic', sans-serif;
         }
         .company-title span {
-            color: #eab308;
-            text-shadow: 0 0 12px rgba(234, 179, 8, 0.8);
+            color: #3b82f6;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
         }
 
         .account-badge {
             background: rgba(3, 7, 18, 0.9);
-            border: 1px solid #eab308;
-            box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
+            border: 1px solid #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
             padding: 5px 14px;
             border-radius: 20px;
             display: inline-flex;
@@ -180,7 +141,7 @@
         .account-badge input {
             background: transparent;
             border: none;
-            color: #fde047;
+            color: #60a5fa;
             font-size: 15px;
             font-weight: 700;
             width: 75px;
@@ -250,9 +211,6 @@
             margin-bottom: 12px;
             text-align: right;
         }
-        [dir="ltr"] .field-group {
-            text-align: left;
-        }
         .field-label {
             font-size: 12px;
             font-weight: 600;
@@ -265,8 +223,8 @@
             display: flex;
             align-items: center;
             background: rgba(3, 7, 18, 0.8);
-            border: 1px solid #ca8a04;
-            box-shadow: 0 0 8px rgba(202, 138, 4, 0.2);
+            border: 1px solid #1e40af;
+            box-shadow: 0 0 8px rgba(30, 64, 175, 0.2);
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -283,11 +241,11 @@
             font-family: 'Poppins', 'Noto Kufi Arabic', sans-serif;
         }
         .copy-btn {
-            background: rgba(45, 36, 10, 0.8);
+            background: rgba(30, 41, 59, 0.8);
             border: none;
             padding: 0 14px;
             cursor: pointer;
-            color: #fde047;
+            color: #60a5fa;
             font-size: 12px;
             font-weight: 700;
             transition: background 0.2s, color 0.2s;
@@ -296,53 +254,47 @@
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             min-height: 38px;
         }
-        [dir="ltr"] .copy-btn {
-            border-right: none;
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-        }
         .copy-btn:hover {
-            background: #ca8a04;
+            background: #2563eb;
             color: #ffffff;
-            box-shadow: 0 0 10px #ca8a04;
+            box-shadow: 0 0 10px #2563eb;
         }
         
+        /* باکسی کۆدەکە (پیشاندانی کۆد لە سەرەوە و دوگمە لە خوارەوە) */
         .action-fetch-box {
             margin: 14px 0;
             background: rgba(3, 7, 18, 0.95);
-            border: 1.5px solid #eab308;
-            box-shadow: 0 0 12px rgba(234, 179, 8, 0.25);
+            border: 1.5px solid #3b82f6;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
             border-radius: 14px;
             padding: 12px;
             text-align: right;
         }
-        [dir="ltr"] .action-fetch-box {
-            text-align: left;
-        }
         .action-fetch-box .field-label {
-            color: #fde047;
+            color: #60a5fa;
             font-weight: 700;
             margin-bottom: 6px;
         }
         .fetch-btn {
             display: block;
             width: 100%;
-            background: linear-gradient(135deg, #ca8a04 0%, #854d0e 100%);
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
             color: #ffffff;
-            border: 1px solid #fde047;
+            border: 1px solid #60a5fa;
             cursor: pointer;
             padding: 9px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 700;
-            box-shadow: 0 0 10px rgba(202, 138, 4, 0.4);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
             transition: all 0.2s ease;
             margin-top: 8px;
         }
 
         .code-display-box {
             background: #020617;
-            border: 1.5px solid #fde047;
-            box-shadow: 0 0 10px rgba(253, 224, 71, 0.3), inset 0 0 6px rgba(253, 224, 71, 0.15);
+            border: 1.5px solid #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 6px rgba(56, 189, 248, 0.15);
             border-radius: 10px;
             padding: 4px 8px;
             display: flex;
@@ -352,7 +304,7 @@
         .code-input-field {
             background: transparent;
             border: none;
-            color: #fde047;
+            color: #38bdf8;
             font-size: 16px;
             font-weight: 800;
             text-align: center;
@@ -370,11 +322,12 @@
             min-height: 14px;
         }
 
+        /* دوگمەی کردنەوەی پەڕەی دووەم بۆ زانیارییە شاراوەکان */
         .show-modal-btn {
             width: 100%;
-            background: rgba(30, 25, 10, 0.8);
-            border: 1.5px solid #eab308;
-            color: #fde047;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1.5px solid #3b82f6;
+            color: #38bdf8;
             padding: 10px;
             border-radius: 12px;
             font-size: 13px;
@@ -386,14 +339,15 @@
             gap: 8px;
             margin-top: 15px;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
         }
         .show-modal-btn:hover {
-            background: #713f12;
+            background: #1e3a8a;
             color: #ffffff;
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
 
+        /* پەڕەی نوێ (Modal) بۆ پیشاندانی ڕۆژی لەدایکبوون و ژمارەی تەلەفۆن */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -416,9 +370,9 @@
             pointer-events: auto;
         }
         .modal-card {
-            background: rgba(15, 15, 18, 0.98);
-            border: 2px solid #fde047;
-            box-shadow: 0 0 25px rgba(253, 224, 71, 0.4);
+            background: rgba(15, 23, 42, 0.98);
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
             border-radius: 20px;
             width: 100%;
             max-width: 380px;
@@ -426,9 +380,6 @@
             text-align: right;
             transform: scale(0.9);
             transition: transform 0.3s ease;
-        }
-        [dir="ltr"] .modal-card {
-            text-align: left;
         }
         .modal-overlay.active .modal-card {
             transform: scale(1);
@@ -442,7 +393,7 @@
             padding-bottom: 8px;
         }
         .modal-title {
-            color: #fde047;
+            color: #38bdf8;
             font-size: 14px;
             font-weight: 800;
         }
@@ -483,54 +434,69 @@
 <body>
 
     <div class="container">
-        <!-- Language Switcher -->
-        <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLanguage('ku')">KU</button>
-            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('ar')">AR</button>
-        </div>
-
-        <!-- WhatsApp Circular Button -->
-        <a id="whatsappLink" href="#" target="_blank" class="whatsapp-banner" title="WhatsApp">
+        <!-- دوگمەی واتساپی بازنەیی -->
+        <a id="whatsappLink" href="#" target="_blank" class="whatsapp-banner" title="پەیوەندی لە ڕێگەی واتساپەوە">
             <svg viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
             </svg>
         </a>
 
-        <!-- ABO Phone Logo -->
+        <!-- لۆگۆی DB و ژمارەی ئەکاونت -->
         <div class="logo-container">
             <div class="db-logo">
-                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="25" y="15" width="75" height="135" rx="12" fill="none" stroke="#eab308" stroke-width="6"/>
-                    <rect x="52" y="22" width="20" height="5" rx="2" fill="#eab308"/>
-                    <path d="M 38 125 L 62 45 L 86 125 M 46 95 L 78 95 L 62 112" fill="none" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- خەتە خولاوەکەی نووسینی سەرەوە و خوارەوە -->
+                        <path id="textCircleTop" d="M 30,100 A 70,70 0 0,1 170,100" />
+                        <path id="textCircleBottom" d="M 170,100 A 70,70 0 0,1 30,100" />
+                    </defs>
+                    <!-- بازنەی دەروە و ناوەوە -->
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="#60a5fa" stroke-width="4" />
+                    <circle cx="100" cy="100" r="76" fill="none" stroke="#3b82f6" stroke-width="2" />
                     
-                    <path d="M 120 45 L 148 45 C 168 45 168 78 148 78 L 120 78 L 120 45 Z" fill="none" stroke="#fde047" stroke-width="7" stroke-linejoin="round"/>
-                    <path d="M 120 78 L 152 78 C 174 78 174 115 152 115 L 120 115 L 120 78 Z" fill="none" stroke="#fde047" stroke-width="7" stroke-linejoin="round"/>
-                    <circle cx="140" cy="62" r="4" fill="#fde047"/>
-                    <circle cx="143" cy="96" r="4" fill="#fde047"/>
-
-                    <circle cx="215" cy="80" r="32" fill="none" stroke="#fde047" stroke-width="7"/>
-                    <circle cx="215" cy="80" r="18" fill="none" stroke="#fde047" stroke-width="3" stroke-dasharray="4 2"/>
-
-                    <line x1="110" y1="123" x2="245" y2="123" stroke="#eab308" stroke-width="3"/>
-                    <text x="178" y="148" font-family="'Poppins', sans-serif" font-weight="800" font-size="22" fill="#fde047" text-anchor="middle" letter-spacing="2">Phone</text>
+                    <!-- نووسینی دەوری لۆگۆکە -->
+                    <text fill="#ffffff" font-size="16" font-weight="bold" font-family="'Poppins', sans-serif" letter-spacing="1.5">
+                        <textPath href="#textCircleTop" startOffset="50%" text-anchor="middle">COMPANY DU BRA</textPath>
+                    </text>
+                    <text fill="#ffffff" font-size="14" font-weight="bold" font-family="'Poppins', sans-serif" letter-spacing="1">
+                        <textPath href="#textCircleBottom" startOffset="50%" text-anchor="middle">IRAQ KURDISTAN</textPath>
+                    </text>
+                    
+                    <!-- درەختە لایەکیەکان (Wheat/Laurel Wreath) -->
+                    <g fill="#60a5fa">
+                        <!-- لای چەپ -->
+                        <path d="M 40,95 C 32,85 28,70 32,60 C 35,70 42,80 43,90 Z" />
+                        <path d="M 42,105 C 33,115 28,130 33,140 C 36,130 43,120 44,110 Z" />
+                        <!-- لای ڕاست -->
+                        <path d="M 160,95 C 168,85 172,70 168,60 C 165,70 158,80 157,90 Z" />
+                        <path d="M 158,105 C 167,115 172,130 167,140 C 164,130 157,120 156,110 Z" />
+                    </g>
+                    
+                    <!-- سێوی ئاپڵ لە ناوەڕاست -->
+                    <g transform="translate(100, 103) scale(1.15)">
+                        <!-- گەڵای سێوەکە -->
+                        <path d="M 2,-28 C 8,-38 16,-34 14,-26 C 6,-24 0,-26 2,-28 Z" fill="#60a5fa" />
+                        <!-- جەستەی سێوەکە لەگەڵ گازەکە -->
+                        <path d="M -18,-20 C -26,-20 -32,-10 -32,2 C -32,18 -18,30 -10,30 C -4,30 -2,27 0,27 C 2,27 4,30 10,30 C 18,30 32,18 32,2 C 32,-2 30,-5 28,-7 C 23,-2 16,0 16,-8 C 16,-18 25,-20 25,-20 C 20,-24 10,-22 0,-18 C -6,-22 -14,-20 -18,-20 Z" fill="#ffffff" />
+                        <!-- نووسینی DB لە ناوەڕاستی سێوەکە -->
+                        <text x="0" y="7" font-family="'Poppins', sans-serif" font-weight="900" font-size="22" fill="#030712" text-anchor="middle" letter-spacing="-1">DB</text>
+                    </g>
                 </svg>
             </div>
-            <div class="company-title">ABO <span>PHONE</span></div>
+            <div class="company-title">COMPANY <span>DU BRA</span></div>
             
             <div class="account-badge">
-                <span id="lblAccount">ئەکاونت:</span>
+                <span>ئەکاونت:</span>
                 <input type="text" id="accSmallInput" value="" readonly>
             </div>
         </div>
 
-        <!-- Warning Box -->
+        <!-- باکسی ئاگاداری -->
         <div id="warningBox" class="warning-box">
-            <div id="warnTitle" class="warning-title">
+            <div class="warning-title">
                 ⚠️ ئاگادارییەکی گرنگ
             </div>
-            <div id="warnText" class="warning-text">
+            <div class="warning-text">
                 تکایە بەهیچ شێوەیەک ئەم Apple ID لە Settings ی موبایلەکەت داخل مەکە! تەنها لە App Store داخل بکە.<br><br>
                 <strong>تکایە کاتێک Apple ID داخل کرد ڕاستەوخۆ بیخەرە سەر ژمارەی موبایلی خۆت.</strong>
             </div>
@@ -540,31 +506,31 @@
         </div>
 
         <div id="content" style="display: none;">
-            <div id="loadingText" class="loading">چاوەڕوان بە، زانیارییەکان دەهێنرێن...</div>
+            <div class="loading">چاوەڕوان بە، زانیارییەکان دەهێنرێن...</div>
         </div>
     </div>
 
-    <!-- Hidden Info Modal -->
+    <!-- پەڕەی دووەم (Modal) بۆ زانیارییە شاراوەکان -->
     <div id="infoModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <div id="modalTitle" class="modal-title">🔐 زانیارییە شاراوەکان</div>
+                <div class="modal-title">🔐 زانیارییە شاراوەکان</div>
                 <button class="close-modal-btn" onclick="toggleModal(false)">✕</button>
             </div>
             
             <div class="field-group">
-                <label id="lblBirthday" class="field-label">ڕۆژی لەدایکبوون (Birthday)</label>
+                <label class="field-label">ڕۆژی لەدایکبوون (Birthday)</label>
                 <div class="input-with-copy">
                     <input type="text" id="bdayInput" class="field-input" value="" readonly>
-                    <button id="btnCopyBday" class="copy-btn" onclick="copyText('bdayInput')">کۆپی</button>
+                    <button class="copy-btn" onclick="copyText('bdayInput')">کۆپی</button>
                 </div>
             </div>
 
             <div class="field-group">
-                <label id="lblPhone" class="field-label">ژمارەی تەلەفۆن (Phone)</label>
+                <label class="field-label">ژمارەی تەلەفۆن (Phone)</label>
                 <div class="input-with-copy">
                     <input type="text" id="phoneInput" class="field-input" value="" readonly>
-                    <button id="btnCopyPhone" class="copy-btn" onclick="copyText('phoneInput')">کۆپی</button>
+                    <button class="copy-btn" onclick="copyText('phoneInput')">کۆپی</button>
                 </div>
             </div>
         </div>
@@ -573,284 +539,184 @@
     <div id="toast" class="toast">بە سەرکەوتوویی کۆپی کرا!</div>
 
     <script>
-        const translations = {
-            ku: {
-                dir: "rtl",
-                lblAccount: "ئەکاونت:",
-                warnTitle: "⚠️ ئاگادارییەکی گرنگ",
-                warnText: "تکایە بەهیچ شێوەیەک ئەم Apple ID لە Settings ی موبایلەکەت داخل مەکە! تەنها لە App Store داخل بکە.<br><br><strong>تکایە کاتێک Apple ID داخل کرد ڕاستەوخۆ بیخەرە سەر ژمارەی موبایلی خۆت.</strong>",
-                btnWait: "چاوەڕوان بە ({s})...",
-                btnAgree: "من ڕازیم",
-                loading: "چاوەڕوان بە، زانیارییەکان دەهێنرێن...",
-                errNoAcc: "تکایە ژمارەی ئەکاونت لە لینکەکەدا دیاری بکە (نموونە: ?account=1)",
-                lblEmail: "ئیمەیل (Email)",
-                lblPass: "پاسوۆرد (Password)",
-                lblCode: "کۆدی دڵنیایی",
-                btnGetCode: "وەرگرتنی کۆدی دڵنیایی",
-                btnShowHidden: "👁️ پێشان دانی زانیارییە شاراوەکان (روز / ژمارە)",
-                modalTitle: "🔐 زانیارییە شاراوەکان",
-                lblBday: "ڕۆژی لەدایکبوون (Birthday)",
-                lblPhone: "ژمارەی تەلەفۆن (Phone)",
-                btnCopy: "کۆپی",
-                toastCopied: "بە سەرکەوتوویی کۆپی کرا!",
-                codeNoLink: "لینک نییە",
-                codeNotFound: "نەدۆزرایەوە",
-                codeErr: "هەڵە",
-                codeTimer: "کۆدەکە دوای {s} چرکەی تر دەسڕێتەوە",
-                codeExpired: "کۆدەکە سڕایەوە! کۆتایی هات."
-            },
-            en: {
-                dir: "ltr",
-                lblAccount: "Account:",
-                warnTitle: "⚠️ Important Notice",
-                warnText: "Please DO NOT sign in with this Apple ID in device Settings! Only sign in through the App Store.<br><br><strong>Once signed in, immediately link it to your own phone number.</strong>",
-                btnWait: "Please wait ({s})...",
-                btnAgree: "I Agree",
-                loading: "Please wait, fetching data...",
-                errNoAcc: "Please specify an account number in the URL (e.g. ?account=1)",
-                lblEmail: "Email",
-                lblPass: "Password",
-                lblCode: "Verification Code",
-                btnGetCode: "Get Verification Code",
-                btnShowHidden: "👁️ Show Hidden Info (Birthday / Phone)",
-                modalTitle: "🔐 Hidden Information",
-                lblBday: "Birthday",
-                lblPhone: "Phone Number",
-                btnCopy: "Copy",
-                toastCopied: "Copied successfully!",
-                codeNoLink: "No Link",
-                codeNotFound: "Not Found",
-                codeErr: "Error",
-                codeTimer: "Code expires in {s} seconds",
-                codeExpired: "Code expired!"
-            },
-            ar: {
-                dir: "rtl",
-                lblAccount: "الحساب:",
-                warnTitle: "⚠️ تنبيه هام جداً",
-                warnText: "الرجاء عدم تسجيل الدخول بـ Apple ID في إعدادات الهاتف (Settings)! استخدمه في App Store فقط.<br><br><strong>عند تسجيل الدخول، يرجى ربطه برقم هاتفك الشخصي فوراً.</strong>",
-                btnWait: "انتظر قليلاً ({s})...",
-                btnAgree: "أنا أوافق",
-                loading: "جاري تحميل البيانات، يرجى الانتظار...",
-                errNoAcc: "يرجى تحديد رقم الحساب في الرابط (مثال: ?account=1)",
-                lblEmail: "البريد الإلكتروني (Email)",
-                lblPass: "كلمة السر (Password)",
-                lblCode: "رمز التحقق",
-                btnGetCode: "الحصول على رمز التحقق",
-                btnShowHidden: "👁️ إظهار المعلومات المخفية (التاريخ / الرقم)",
-                modalTitle: "🔐 المعلومات المخفية",
-                lblBday: "تاريخ الميلاد (Birthday)",
-                lblPhone: "رقم الهاتف (Phone)",
-                btnCopy: "نسخ",
-                toastCopied: "تم النسخ بنجاح!",
-                codeNoLink: "لا يوجد رابط",
-                codeNotFound: "غير موجود",
-                codeErr: "خطأ",
-                codeTimer: "سيتم حذف الرمز خلال {s} ثانية",
-                codeExpired: "انتهت صلاحية الرمز!"
-            }
-        };
-
-        let currentLang = 'ku';
         const urlParams = new URLSearchParams(window.location.search);
         const accountNumber = urlParams.get('account');
-        
-        // Dynamic Script URL from Google Apps Script
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxoOIt3vkR-Xr5bDqn3KtaXb7HcyWLbMouYrkTauXe8rsWIlPBY8piBx3WRk7RaQZn_MA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwQTQ1ISmZI6mX9QCqIbZiXO4-uc0bthCrO9Nmu1FO0xX8L_6Eoap9SEm3P9ZEwZNPW/exec';
+        let countdownTimer = null;
+        let fetchedData = null;
 
-        let accountData = null;
-        let timerInterval = null;
+        if (accountNumber) {
+            document.getElementById('accSmallInput').value = accountNumber;
+            const phone = "9647517393932";
+            const message = encodeURIComponent(`سڵاو، من ئەکاونتی ژمارە ${accountNumber}م هەیە لە کۆمپانیای دوو برا.`);
+            document.getElementById('whatsappLink').href = `https://wa.me/${phone}?text=${message}`;
 
-        document.getElementById('accSmallInput').value = accountNumber || '#';
-
-        // Set Language Logic
-        function setLanguage(lang) {
-            currentLang = lang;
-            const t = translations[lang];
-            
-            document.documentElement.dir = t.dir;
-            document.documentElement.lang = lang;
-
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            if(event && event.target) {
-                event.target.classList.add('active');
-            }
-
-            document.getElementById('lblAccount').innerText = t.lblAccount;
-            document.getElementById('warnTitle').innerText = t.warnTitle;
-            document.getElementById('warnText').innerHTML = t.warnText;
-
-            const acceptBtn = document.getElementById('acceptBtn');
-            if (acceptBtn.disabled) {
-                acceptBtn.innerText = t.btnWait.replace('{s}', countdownSeconds);
-            } else {
-                acceptBtn.innerText = t.btnAgree;
-            }
-
-            document.getElementById('modalTitle').innerText = t.modalTitle;
-            document.getElementById('lblBirthday').innerText = t.lblBday;
-            document.getElementById('lblPhone').innerText = t.lblPhone;
-            
-            document.querySelectorAll('.copy-btn').forEach(btn => btn.innerText = t.btnCopy);
-
-            if (accountData) {
-                renderContent();
-            }
+            fetch(`${scriptURL}?account=${accountNumber}`)
+                .then(response => response.json())
+                .then(res => {
+                    fetchedData = res;
+                })
+                .catch(err => {
+                    fetchedData = { status: 'error', message: 'هەڵەیەک ڕوویدا لە پەیوەندی کردن بە سیستمەوە.' };
+                });
         }
 
-        // Timer for Warning Button
-        let countdownSeconds = 5;
-        const timer = setInterval(() => {
-            countdownSeconds--;
-            const acceptBtn = document.getElementById('acceptBtn');
-            if (countdownSeconds > 0) {
-                acceptBtn.innerText = translations[currentLang].btnWait.replace('{s}', countdownSeconds);
+        let waitTime = 5;
+        const acceptBtn = document.getElementById('acceptBtn');
+
+        const waitTimer = setInterval(() => {
+            waitTime--;
+            if (waitTime > 0) {
+                acceptBtn.innerText = `چاوەڕوان بە (${waitTime})...`;
             } else {
-                clearInterval(timer);
+                clearInterval(waitTimer);
+                acceptBtn.innerText = "من ڕازیم";
                 acceptBtn.disabled = false;
-                acceptBtn.innerText = translations[currentLang].btnAgree;
             }
         }, 1000);
 
         function acceptAgreement() {
             document.getElementById('warningBox').style.display = 'none';
             document.getElementById('content').style.display = 'block';
-            fetchAccountData();
-        }
 
-        // Fetch Account Details from Script
-        async function fetchAccountData() {
             if (!accountNumber) {
-                document.getElementById('content').innerHTML = `<div class="error-msg">${translations[currentLang].errNoAcc}</div>`;
+                document.getElementById('content').innerHTML = '<div class="error-msg">تکایە ژمارەی ئەکاونت لە لینکەکەدا دیاری بکە (نموونە: ?account=1)</div>';
                 return;
             }
 
-            try {
-                const response = await fetch(`${scriptURL}?account=${encodeURIComponent(accountNumber)}`);
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    accountData = data;
-                    renderContent();
-                } else {
-                    document.getElementById('content').innerHTML = `<div class="error-msg">${data.message || translations[currentLang].codeNotFound}</div>`;
-                }
-            } catch (err) {
-                document.getElementById('content').innerHTML = `<div class="error-msg">${translations[currentLang].codeErr}</div>`;
+            if (fetchedData) {
+                renderData(fetchedData);
+            } else {
+                const checkInterval = setInterval(() => {
+                    if (fetchedData) {
+                        clearInterval(checkInterval);
+                        renderData(fetchedData);
+                    }
+                }, 200);
             }
         }
 
-        // Render UI with Account Data
-        function renderContent() {
-            const t = translations[currentLang];
-            const contentDiv = document.getElementById('content');
+        function renderData(res) {
+            if (res.status === 'success') {
+                let d = res.data;
+                
+                // پڕکردنەوەی بەهاکانی پەڕەی دووەم
+                document.getElementById('bdayInput').value = d.birthday || '';
+                document.getElementById('phoneInput').value = d.phone || '';
 
-            contentDiv.innerHTML = `
-                <div class="field-group">
-                    <label class="field-label">${t.lblEmail}</label>
-                    <div class="input-with-copy">
-                        <input type="text" id="emailInput" class="field-input" value="${accountData.email || ''}" readonly>
-                        <button class="copy-btn" onclick="copyText('emailInput')">${t.btnCopy}</button>
+                document.getElementById('content').innerHTML = `
+                    <div class="field-group">
+                        <label class="field-label">ئیمەیل (Email)</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="emailInput" class="field-input" value="${d.email || ''}" readonly>
+                            <button class="copy-btn" onclick="copyText('emailInput')">کۆپی</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="field-group">
-                    <label class="field-label">${t.lblPass}</label>
-                    <div class="input-with-copy">
-                        <input type="text" id="passInput" class="field-input" value="${accountData.password || ''}" readonly>
-                        <button class="copy-btn" onclick="copyText('passInput')">${t.btnCopy}</button>
+                    <div class="field-group">
+                        <label class="field-label">پاسوۆرد (Password)</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="passInput" class="field-input" value="${d.password || ''}" readonly>
+                            <button class="copy-btn" onclick="copyText('passInput')">کۆپی</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="action-fetch-box">
-                    <label class="field-label">${t.lblCode}</label>
-                    <div class="code-display-box">
-                        <input type="text" id="codeInput" class="code-input-field" value="------" readonly>
-                        <button class="copy-btn" onclick="copyText('codeInput')">${t.btnCopy}</button>
+                    <!-- باکسی وەرگرتنی کۆدەکە -->
+                    <div class="action-fetch-box">
+                        <label class="field-label">کۆدی دڵنیایی</label>
+                        <div class="code-display-box">
+                            <input type="text" id="fetchedResultInput" class="code-input-field" value="" placeholder="------" readonly>
+                            <button class="copy-btn" style="border-radius: 6px; min-height: 28px; padding: 0 10px; font-size: 11px;" onclick="copyText('fetchedResultInput')">کۆپی</button>
+                        </div>
+                        <div id="timerNotice" class="timer-text"></div>
+                        <button class="fetch-btn" id="fetchCodeBtn" onclick="getVerificationCode()">وەرگرتنی کۆد</button>
                     </div>
-                    <div id="timerText" class="timer-text"></div>
-                    <button class="fetch-btn" onclick="fetchVerificationCode()">${t.btnGetCode}</button>
-                </div>
 
-                <button class="show-modal-btn" onclick="toggleModal(true)">${t.btnShowHidden}</button>
-            `;
-
-            document.getElementById('bdayInput').value = accountData.birthday || 'N/A';
-            document.getElementById('phoneInput').value = accountData.phone || 'N/A';
-
-            if (accountData.whatsapp) {
-                document.getElementById('whatsappLink').href = accountData.whatsapp;
+                    <button class="show-modal-btn" onclick="toggleModal(true)">
+                        🔒 پیشاندانی زانیارییە شاراوەکان
+                    </button>
+                `;
+            } else {
+                document.getElementById('content').innerHTML = `<div class="error-msg">${res.message || 'ئەکاونتەکەت نەدۆزرایەوە!'}</div>`;
             }
         }
 
-        // Fetch Code Logic
-        async function fetchVerificationCode() {
-            const codeInput = document.getElementById('codeInput');
-            const timerText = document.getElementById('timerText');
-            const t = translations[currentLang];
+        function getVerificationCode() {
+            const btn = document.getElementById('fetchCodeBtn');
+            const resultInput = document.getElementById('fetchedResultInput');
+            const timerNotice = document.getElementById('timerNotice');
+            
+            btn.disabled = true;
+            btn.innerText = "چاوەڕوان بە...";
+            resultInput.value = "";
+            timerNotice.innerText = "";
 
-            codeInput.value = "...";
-            timerText.innerText = "";
-
-            try {
-                const response = await fetch(`${scriptURL}?account=${encodeURIComponent(accountNumber)}&action=getCode`);
-                const data = await response.json();
-
-                if (data.status === 'success' && data.code) {
-                    codeInput.value = data.code;
-                    startCodeCountdown(60);
-                } else {
-                    codeInput.value = "------";
-                    timerText.innerText = data.message || t.codeNotFound;
-                }
-            } catch (err) {
-                codeInput.value = "------";
-                timerText.innerText = t.codeErr;
-            }
+            fetch(`${scriptURL}?account=${accountNumber}&getCode=true`)
+                .then(response => response.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerText = "وەرگرتنی کۆد";
+                    if (res.status === 'success' && res.code) {
+                        resultInput.value = res.code;
+                        startTimer(60);
+                    } else {
+                        resultInput.value = "نەدۆزرایەوە";
+                        timerNotice.innerText = "هیچ کۆدێک نەدۆزرایەوە، تکایە دووبارە هەوڵبدەرەوە.";
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    btn.innerText = "وەرگرتنی کۆد";
+                    resultInput.value = "هەڵە";
+                    timerNotice.innerText = "کێشەیەک لە پەیوەندی دروستبوو.";
+                });
         }
 
-        // Countdown Timer for Code
-        function startCodeCountdown(seconds) {
-            clearInterval(timerInterval);
-            let left = seconds;
-            const timerText = document.getElementById('timerText');
-            const codeInput = document.getElementById('codeInput');
-
-            timerInterval = setInterval(() => {
-                if (left > 0) {
-                    timerText.innerText = translations[currentLang].codeTimer.replace('{s}', left);
-                    left--;
+        function startTimer(seconds) {
+            clearInterval(countdownTimer);
+            let timeLeft = seconds;
+            const timerNotice = document.getElementById('timerNotice');
+            
+            countdownTimer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    timerNotice.innerText = "کۆدەکە بەسەرچوو!";
                 } else {
-                    clearInterval(timerInterval);
-                    codeInput.value = "------";
-                    timerText.innerText = translations[currentLang].codeExpired;
+                    timerNotice.innerText = `کۆدەکە بەسەر دەچێت لە: ${timeLeft} چڕکەدا`;
+                    timeLeft--;
                 }
             }, 1000);
         }
 
-        // Modal Handler
         function toggleModal(show) {
             const modal = document.getElementById('infoModal');
-            if (show) modal.classList.add('active');
-            else modal.classList.remove('active');
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
         }
 
-        // Copy Text Helper
-        function copyText(elementId) {
-            const input = document.getElementById(elementId);
-            if (!input || !input.value || input.value === "------" || input.value === "...") return;
-
+        function copyText(id) {
+            const input = document.getElementById(id);
+            if (!input || !input.value) return;
+            
+            input.select();
+            input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value).then(() => {
-                showToast(translations[currentLang].toastCopied);
+                showToast();
+            }).catch(err => {
+                document.execCommand("copy");
+                showToast();
             });
         }
 
-        // Toast Handler
-        function showToast(message) {
+        function showToast() {
             const toast = document.getElementById('toast');
-            toast.innerText = message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
         }
     </script>
 </body>
