@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIMAN - وەرگرتنی کۆد</title>
+    <title>AIMAN - وەرگرتنی دەق و کۆد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
             text-align: center;
-            width: 340px;
+            width: 350px;
             border: 1px solid #00b4d8;
         }
         .brand-title {
@@ -37,8 +37,8 @@
             margin-bottom: 15px;
         }
         textarea {
-            width: 90%;
-            height: 100px;
+            width: 92%;
+            height: 120px;
             padding: 10px;
             margin: 10px 0;
             border-radius: 6px;
@@ -49,6 +49,7 @@
             font-size: 18px;
             font-weight: bold;
             resize: none;
+            direction: ltr;
         }
         button {
             width: 98%;
@@ -80,9 +81,9 @@
 
 <div class="card">
     <div class="brand-title">AIMAN</div>
-    <div class="subtitle">وەرگرتنی خۆکارانەی کۆد</div>
+    <div class="subtitle">خوێندنەوەی ڕاستەوخۆی وەڵامی سێرڤەر</div>
     
-    <textarea id="fetchedResultInput" placeholder="چاوەڕوان بە... کۆد یان دەقەکە بار دەکرێت" readonly></textarea>
+    <textarea id="fetchedResultInput" placeholder="چاوەڕوان بە... دەقەکە لە پاش پشتەوە وەرپێڕێزرێت" readonly></textarea>
     <button id="fetchCodeBtn" onclick="getVerificationCode()">دووبارە وەرگرتنەوە</button>
     <div id="timerNotice" class="status"></div>
 </div>
@@ -97,38 +98,36 @@
 
         btn.disabled = true;
         btn.innerText = "چاوەڕوان بە...";
-        resultInput.value = "لەپشکنیندایە...";
+        resultInput.value = "لە پشکنیندایە...";
         timerNotice.innerText = "";
 
         try {
+            // بەکارهێنانی Proxy بۆ تێپەڕاندنی کێشەی CORS
             const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(directApiURL) + "&t=" + new Date().getTime();
             const response = await fetch(proxyUrl);
             const textData = await response.text();
 
-            // هەوڵدان بۆ دۆزینەوەی کۆدی ٦ ژمارەیی
-            const match = textData.match(/\d{6}/);
-            
-            if (match) {
-                resultInput.value = match[0];
+            if (textData && textData.trim() !== "") {
+                // تەواوی ئەو دەق و هێمایانەی سێرڤەر دەیگەرێنێتەوە ڕاستەوخۆ نیشانی دەدات
+                resultInput.value = textData.trim();
                 timerNotice.style.color = "#4caf50";
-                timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
+                timerNotice.innerText = "وەڵامی سێرڤەر بە تەواوی وەستێنرا و خوێنرایەوە!";
             } else {
-                // ئەگەر ٦ ژمارەش نەبوو، دەقی وەڵامەکە بەتەواوی نیشان دەدات
-                resultInput.value = textData;
+                resultInput.value = "هیچ دەقێک نییە";
                 timerNotice.style.color = "#ffb703";
-                timerNotice.innerText = "دەقی تەواوی وەڵامی سێرڤەر وەرگیرا.";
+                timerNotice.innerText = "سێرڤەرەکە وەڵامێکی بەتاڵی گەڕاندەوە.";
             }
         } catch (err) {
             resultInput.value = "کێشەی پەیوەندی";
             timerNotice.style.color = "#f44336";
-            timerNotice.innerText = "نەتوانرا پەیوەندی بە سێرڤەرەوە بکرێت.";
+            timerNotice.innerText = "نەتوانرا لە پاش پشتەوە پەیوەندی بە سێرڤەرەکەوە بکرێت.";
         } finally {
             btn.disabled = false;
             btn.innerText = "دووبارە وەرگرتنەوە";
         }
     }
 
-    // هێنانی کۆدەکە بە شێوەی ئۆتۆماتیکی لەگەڵ بەگەڕخستنی پەڕەکە
+    // هەرکە پەڕەکە کرایەوە خۆکارانە دەست بە پشکنین دەکات
     window.onload = function() {
         getVerificationCode();
     };
