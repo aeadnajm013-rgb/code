@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD PONE - وەرگرتنی کۆد</title>
+    <title>AIMAN - وەرگرتنی کۆد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,10 +26,11 @@
         }
         .brand-title {
             color: #00b4d8;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             margin-bottom: 5px;
             text-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
+            letter-spacing: 1px;
         }
         .subtitle {
             color: #a3cef1;
@@ -45,7 +46,7 @@
             background-color: #0b132b;
             color: #ffffff;
             text-align: center;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             letter-spacing: 2px;
         }
@@ -78,7 +79,7 @@
 <body>
 
 <div class="card">
-    <div class="brand-title">AYAD PHONE</div>
+    <div class="brand-title">AIMAN</div>
     <div class="subtitle">کۆدی ڕاستێنەربوون</div>
     
     <input type="text" id="fetchedResultInput" placeholder="کۆد لێرە دەردەکەوێت" readonly>
@@ -87,8 +88,8 @@
 </div>
 
 <script>
-    // لینکی Web App ی Apps Script
     const scriptURL = "https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec";
+    const directApiURL = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
 
     async function getVerificationCode() {
         const btn = document.getElementById('fetchCodeBtn');
@@ -100,6 +101,7 @@
         resultInput.value = "";
         timerNotice.innerText = "";
 
+        // 1. هەوڵدان لە ڕێگەی Apps Script
         try {
             const response = await fetch(`${scriptURL}?getCode=true`);
             const data = await response.json();
@@ -108,15 +110,34 @@
                 resultInput.value = data.code;
                 timerNotice.style.color = "#4caf50";
                 timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
+                btn.disabled = false;
+                btn.innerText = "وەرگرتنی کۆد";
+                return;
+            }
+        } catch (err) {
+            console.log("Apps Script error, trying proxy...");
+        }
+
+        // 2. ئەگەر Apps Script کاری نەکرد، هەوڵدان بە Proxy ی دەرەکی
+        try {
+            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(directApiURL);
+            const response = await fetch(proxyUrl);
+            const textData = await response.text();
+
+            const match = textData.match(/\d{6}/);
+            if (match) {
+                resultInput.value = match[0];
+                timerNotice.style.color = "#4caf50";
+                timerNotice.innerText = "کۆدەکە ڕاستەوخۆ وەرگیرا!";
             } else {
                 resultInput.value = "نەدۆزرایەوە";
                 timerNotice.style.color = "#f44336";
-                timerNotice.innerText = data.message || "کۆدەکە نەدۆزرایەوە.";
+                timerNotice.innerText = "هیچ کۆدێک لە سێرڤەر نییە.";
             }
         } catch (err) {
             resultInput.value = "کێشەی پەیوەندی";
             timerNotice.style.color = "#f44336";
-            timerNotice.innerText = "پەیوەستبوون لەگەڵ سێرڤەر سەرکەوتوو نەبوو.";
+            timerNotice.innerText = "نەتوانرا پەیوەندی بە سێرڤەرەوە بکرێت.";
         } finally {
             btn.disabled = false;
             btn.innerText = "وەرگرتنی کۆد";
