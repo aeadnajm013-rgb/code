@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD PHONE - وەرگرتنی کۆد</title>
+    <title>AYAD PHONE - Verification Code</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,6 +22,14 @@
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
             text-align: center;
             width: 320px;
+            border: 1px solid #00b4d8;
+        }
+        .brand-title {
+            color: #00b4d8;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
         }
         input {
             width: 90%;
@@ -59,14 +67,15 @@
 <body>
 
 <div class="card">
-    <h3>کۆدی ڕاستێنەربوون</h3>
+    <div class="brand-title">AYAD PHONE</div>
+    <p style="margin-top:0; color:#a3cef1;">کۆدی ڕاستێنەربوون</p>
+    
     <input type="text" id="fetchedResultInput" placeholder="کۆد لێرە دەردەکەوێت" readonly>
     <button id="fetchCodeBtn" onclick="getVerificationCode()">وەرگرتنی کۆد</button>
     <div id="timerNotice" class="status"></div>
 </div>
 
 <script>
-    // لینکی Web App ی نوێکراوەتەوە
     const scriptURL = "https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec";
 
     async function getVerificationCode() {
@@ -80,7 +89,6 @@
         timerNotice.innerText = "";
 
         try {
-            // داواکاری ناردن بۆ Apps Script بە پارامێتەری getCode=true
             const response = await fetch(`${scriptURL}?getCode=true`);
             const data = await response.json();
 
