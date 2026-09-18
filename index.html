@@ -1,118 +1,29 @@
-<!DOCTYPE html>
-<html lang="ckb" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دەرهێنانی کۆدی ٦ ژمارەیی</title>
-    <style>
-        body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; text-align: right; }
-        .container { max-width: 500px; margin: 40px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
-        h2 { color: #333; margin-bottom: 20px; }
-        button { background-color: #28a745; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.2s; }
-        button:hover { background-color: #218838; }
-        #status { margin-top: 15px; font-size: 14px; color: #666; }
-        .code-box { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 8px; font-size: 40px; font-family: monospace; font-weight: bold; color: #007bff; letter-spacing: 5px; direction: ltr; min-height: 45px; word-break: break-all; }
-    </style>
-</head>
-<body>
+const express = require('express');
+const axios = require('axios');
+const app = express();
+const PORT = 3000;
 
-<div class="container">
-    <h2>کۆدی ٦ ژمارەیی</h2>
-    
-    <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
-    
-    <div id="status">کلیک لە دوگمەکە بکە بۆ هێنانی کۆدی نوێ</div>
-    
-    <div class="code-box" id="codeDisplay">------</div>
-</div>
+// ڕێگەپێدانی CORS بۆ هەموو داواکارییەکان
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
-<script>
-    async function getCode() {
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
-        const timestamp = new Date().getTime();
-        const fullTarget = targetUrl + '&_t=' + timestamp;
+app.get('/api/getcode', async (req, res) => {
+    try {
+        const targetUrl = `http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=${Date.now()}`;
         
-        // لیستی پرۆکسییەکان
-        const proxies = [
-            'https://api.allorigins.win/raw?url=' + encodeURIComponent(fullTarget),
-            'https://corsproxy.io/?' + encodeURIComponent(fullTarget),
-            'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(fullTarget)
-        ];
-
-        const statusDiv = document.getElementById('status');
-        const codeDisplay = document.getElementById('codeDisplay');
-
-        statusDiv.innerText = 'لە هەوڵی هێنانی کۆدەکەدایە...';
-        statusDiv.style.color = '#007bff';
-        codeDisplay.innerText = '......';
-        codeDisplay.style.fontSize = '40px';
-
-        let rawText = '';
-        let success = false;
-
-        for (let proxy of proxies) {
-            try {
-                const response = await fetch(proxy);
-                if (response.ok) {
-                    rawText = await response.text();
-                    if (rawText && rawText.trim() !== '') {
-                        success = true;
-                        break;
-                    }
-                }
-            } catch (e) {
-                continue;
-            }
-        }
-
-        if (success) {
-            let extractedCode = null;
-
-            // ١. هەوڵدان بۆ خوێندنەوە وەک JSON
-            try {
-                const json = JSON.parse(rawText);
-                if (json && json.data !== undefined) {
-                    extractedCode = String(json.data);
-                }
-            } catch (e) {
-                // ئەگەر وەک JSON نەخوێنرایەوە دەچێتە هەنگاوی دواتر
-            }
-
-            // ٢. ئەگەر JSON کارینەکرد، ڕاستەوخۆ دەگەڕێت بە دوای "data":"038405"
-            if (!extractedCode) {
-                const dataMatch = rawText.match(/"data"\s*:\s*"([^"]+)"/);
-                if (dataMatch) {
-                    extractedCode = dataMatch[1];
-                }
-            }
-
-            // ٣. دۆزینەوەی هەر ٦ ژمارەیەک لە ناو دەقەکەدا
-            if (!extractedCode) {
-                const numMatch = rawText.match(/\b\d{6}\b/);
-                if (numMatch) {
-                    extractedCode = numMatch[0];
-                }
-            }
-
-            // ئەنجام
-            if (extractedCode) {
-                codeDisplay.innerText = extractedCode;
-                statusDiv.innerText = 'کۆدەکە بەسەرکەوتوویی وەرگیرا!';
-                statusDiv.style.color = 'green';
-            } else {
-                codeDisplay.style.fontSize = '16px';
-                codeDisplay.innerText = rawText;
-                statusDiv.innerText = 'ژمارەکە نەدۆزرایەوە لە ناو ئەم دەقەدا:';
-                statusDiv.style.color = 'orange';
-            }
-        } else {
-            codeDisplay.style.fontSize = '36px';
-            codeDisplay.innerText = 'ERROR';
-            statusDiv.innerText = 'نەتوانرا پەیوەندی بە لینکەکەوە بکرێت! دووبارە تاقی بکەرەوە.';
-            statusDiv.style.color = 'red';
-        }
+        // ناردنی داواکاری ڕاستەوخۆ لە سێرڤەرەوە
+        const response = await axios.get(targetUrl, { timeout: 5000 });
+        
+        // ناردنەوەی وەڵامەکە بۆ Frontend
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'نەتوانرا زانیاری لە سێرڤەرەوە وەربگیرێت', details: error.message });
     }
-</script>
+});
 
-</body>
-</html>
+app.listen(PORT, () => {
+    console.log(`سێرڤەرەکە کاردەکات لەسەر پۆڕتی http://localhost:${PORT}`);
+});
