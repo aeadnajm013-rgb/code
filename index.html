@@ -289,6 +289,13 @@
             transition: all 0.2s ease;
             margin-top: 8px;
         }
+        .fetch-btn:disabled {
+            background: #334155;
+            border-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
         .code-display-box {
             background: #020617;
@@ -528,7 +535,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const accountNumber = urlParams.get('account');
-        // لینکی نوێی Google Apps Script
         const scriptURL = 'https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec';
         let countdownTimer = null;
         let fetchedData = null;
@@ -642,33 +648,37 @@
                 .then(res => {
                     btn.disabled = false;
                     btn.innerText = "وەرگرتنی کۆد";
+                    
                     if (res.status === 'success' && res.code) {
                         resultInput.value = res.code;
-                        startTimer(60);
+                        startCodeTimer(60);
                     } else {
                         resultInput.value = "نەدۆزرایەوە";
-                        timerNotice.innerText = "هیچ کۆدێک نەدۆزرایەوە، تکایە دووبارە هەوڵبدەرەوە.";
+                        timerNotice.innerText = res.message || "کۆدەکە نەدۆزرایەوە، دووبارە هەوڵبدەرەوە.";
                     }
                 })
-                .catch(() => {
+                .catch(err => {
                     btn.disabled = false;
                     btn.innerText = "وەرگرتنی کۆد";
-                    resultInput.value = "هەڵە";
-                    timerNotice.innerText = "کێشەیەک لە پەیوەندی دروستبوو.";
+                    timerNotice.innerText = "کێشەیەک ڕوویدا لە وەرگرتنی کۆدەکە.";
                 });
         }
 
-        function startTimer(seconds) {
-            clearInterval(countdownTimer);
-            let timeLeft = seconds;
+        function startCodeTimer(seconds) {
             const timerNotice = document.getElementById('timerNotice');
-            
+            const btn = document.getElementById('fetchCodeBtn');
+            let timeLeft = seconds;
+
+            clearInterval(countdownTimer);
+            btn.disabled = true;
+
             countdownTimer = setInterval(() => {
                 if (timeLeft <= 0) {
                     clearInterval(countdownTimer);
-                    timerNotice.innerText = "کۆدەکە بەسەرچوو!";
+                    timerNotice.innerText = "کۆدەکە بەسەرچوو، دەتوانیت دووبارە داوای بکەیتەوە.";
+                    btn.disabled = false;
                 } else {
-                    timerNotice.innerText = `کۆدەکە بەسەر دەچێت لە: ${timeLeft} چڕکەدا`;
+                    timerNotice.innerText = `کۆدەکە چالاکە بۆ (${timeLeft}) چرکەی تر`;
                     timeLeft--;
                 }
             }, 1000);
@@ -683,22 +693,25 @@
             }
         }
 
-        function copyText(id) {
-            const input = document.getElementById(id);
+        function copyText(inputId) {
+            const input = document.getElementById(inputId);
             if (!input || !input.value) return;
-            
+
             input.select();
             input.setSelectionRange(0, 99999);
+            
             navigator.clipboard.writeText(input.value).then(() => {
-                showToast();
-            }).catch(err => {
-                document.execCommand("copy");
-                showToast();
+                showToast("بە سەرکەوتوویی کۆپی کرا!");
+            }).catch(() => {
+                // Fallback بۆ مۆبایلە کۆنەکان
+                document.execCommand('copy');
+                showToast("بە سەرکەوتوویی کۆپی کرا!");
             });
         }
 
-        function showToast() {
+        function showToast(message) {
             const toast = document.getElementById('toast');
+            toast.innerText = message;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
