@@ -5,104 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دەرهێنانی کۆدی ٦ ژمارەیی</title>
     <style>
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        .card {
-            max-width: 400px;
-            margin: 50px auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+        body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; text-align: right; }
+        .container { max-width: 500px; margin: 40px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
         h2 { color: #333; margin-bottom: 20px; }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-        }
-        button:hover { background-color: #0056b3; }
+        button { background-color: #28a745; color: white; border: none; padding: 14px 20px; font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.2s; }
+        button:hover { background-color: #218838; }
         #status { margin-top: 15px; font-size: 14px; color: #666; }
-        .code-box {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #1e293b;
-            border-radius: 8px;
-            font-size: 45px;
-            font-family: monospace;
-            font-weight: bold;
-            color: #38d9a9;
-            letter-spacing: 5px;
-            direction: ltr;
-            min-height: 55px;
-        }
+        .code-box { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 8px; font-size: 40px; font-family: monospace; font-weight: bold; color: #007bff; letter-spacing: 5px; direction: ltr; min-height: 45px; word-break: break-all; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
     <h2>کۆدی ٦ ژمارەیی</h2>
     
     <button onclick="getCode()">نوێکردنەوە و هێنانی کۆد</button>
     
-    <div id="status">کلیک لە دوگمەکە بکە...</div>
+    <div id="status">کلیک لە دوگمەکە بکە بۆ هێنانی کۆدی نوێ</div>
     
     <div class="code-box" id="codeDisplay">------</div>
 </div>
 
 <script>
-    function getCode() {
+    async function getCode() {
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
+        const timestamp = new Date().getTime();
+        const fullTarget = targetUrl + '&_t=' + timestamp;
+        
+        // لیستی پرۆکسییەکان
+        const proxies = [
+            'https://api.allorigins.win/raw?url=' + encodeURIComponent(fullTarget),
+            'https://corsproxy.io/?' + encodeURIComponent(fullTarget),
+            'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(fullTarget)
+        ];
+
         const statusDiv = document.getElementById('status');
         const codeDisplay = document.getElementById('codeDisplay');
 
-        statusDiv.innerText = 'لە هەوڵی هێنانی کۆددایە...';
+        statusDiv.innerText = 'لە هەوڵی هێنانی کۆدەکەدایە...';
         statusDiv.style.color = '#007bff';
         codeDisplay.innerText = '......';
+        codeDisplay.style.fontSize = '40px';
 
-        // سڕینەوەی سکریپتی کۆن ئەگەر هەبێت
-        const oldScript = document.getElementById('jsonpScript');
-        if (oldScript) oldScript.remove();
+        let rawText = '';
+        let success = false;
 
-        // دروستکردنی کات بۆ دەستکەوتنی کۆدی نوێ بێ Cache
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + Date.now();
+        for (let proxy of proxies) {
+            try {
+                const response = await fetch(proxy);
+                if (response.ok) {
+                    rawText = await response.text();
+                    if (rawText && rawText.trim() !== '') {
+                        success = true;
+                        break;
+                    }
+                }
+            } catch (e) {
+                continue;
+            }
+        }
 
-        // دروستکردنی Script Tag بۆ دەربازبوون لە CORS
-        const script = document.createElement('script');
-        script.id = 'jsonpScript';
-        script.src = targetUrl;
+        if (success) {
+            let extractedCode = null;
 
-        // کاتێک سکریپتەکە باربوو
-        script.onload = function() {
-            statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
-            statusDiv.style.color = 'green';
-        };
+            // ١. هەوڵدان بۆ خوێندنەوە وەک JSON
+            try {
+                const json = JSON.parse(rawText);
+                if (json && json.data !== undefined) {
+                    extractedCode = String(json.data);
+                }
+            } catch (e) {
+                // ئەگەر وەک JSON نەخوێنرایەوە دەچێتە هەنگاوی دواتر
+            }
 
-        script.onerror = function() {
-            // ئەگەر وێبگەڕەکە ڕێگەی نەدا ڕاستەوخۆ دەقەکە بخوێنێتەوە بەهۆی CORS
-            statusDiv.innerText = 'هەڵە لە هێنانی زانیاری! (کێشەی ڕێگەپێدانی سێرڤەر)';
-            statusDiv.style.color = 'red';
+            // ٢. ئەگەر JSON کارینەکرد، ڕاستەوخۆ دەگەڕێت بە دوای "data":"038405"
+            if (!extractedCode) {
+                const dataMatch = rawText.match(/"data"\s*:\s*"([^"]+)"/);
+                if (dataMatch) {
+                    extractedCode = dataMatch[1];
+                }
+            }
+
+            // ٣. دۆزینەوەی هەر ٦ ژمارەیەک لە ناو دەقەکەدا
+            if (!extractedCode) {
+                const numMatch = rawText.match(/\b\d{6}\b/);
+                if (numMatch) {
+                    extractedCode = numMatch[0];
+                }
+            }
+
+            // ئەنجام
+            if (extractedCode) {
+                codeDisplay.innerText = extractedCode;
+                statusDiv.innerText = 'کۆدەکە بەسەرکەوتوویی وەرگیرا!';
+                statusDiv.style.color = 'green';
+            } else {
+                codeDisplay.style.fontSize = '16px';
+                codeDisplay.innerText = rawText;
+                statusDiv.innerText = 'ژمارەکە نەدۆزرایەوە لە ناو ئەم دەقەدا:';
+                statusDiv.style.color = 'orange';
+            }
+        } else {
+            codeDisplay.style.fontSize = '36px';
             codeDisplay.innerText = 'ERROR';
-        };
-
-        document.body.appendChild(script);
-    }
-
-    // فەنکشن بۆ وەرگرتنی وەڵامی JSON لە سێرڤەرەکەوە
-    function handleResponse(response) {
-        const codeDisplay = document.getElementById('codeDisplay');
-        if (response && response.data) {
-            codeDisplay.innerText = response.data;
+            statusDiv.innerText = 'نەتوانرا پەیوەندی بە لینکەکەوە بکرێت! دووبارە تاقی بکەرەوە.';
+            statusDiv.style.color = 'red';
         }
     }
 </script>
