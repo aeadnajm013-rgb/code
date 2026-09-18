@@ -672,7 +672,9 @@
             document.documentElement.lang = lang;
 
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event && event.target) {
+                event.target.classList.add('active');
+            }
 
             document.getElementById('lblAccount').innerText = t.lblAccount;
             document.getElementById('warnTitle').innerText = t.warnTitle;
