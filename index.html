@@ -30,7 +30,6 @@
             font-weight: bold;
             margin-bottom: 5px;
             text-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
-            letter-spacing: 1px;
         }
         .subtitle {
             color: #a3cef1;
@@ -60,7 +59,6 @@
             font-size: 16px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
         }
         button:hover {
             background-color: #5bc0be;
@@ -73,6 +71,7 @@
             margin-top: 12px;
             font-size: 13px;
             color: #ffb703;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -88,7 +87,6 @@
 </div>
 
 <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec";
     const directApiURL = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
 
     async function getVerificationCode() {
@@ -101,26 +99,8 @@
         resultInput.value = "";
         timerNotice.innerText = "";
 
-        // 1. هەوڵدان لە ڕێگەی Apps Script
         try {
-            const response = await fetch(`${scriptURL}?getCode=true`);
-            const data = await response.json();
-
-            if (data.status === "success" && data.code) {
-                resultInput.value = data.code;
-                timerNotice.style.color = "#4caf50";
-                timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
-                btn.disabled = false;
-                btn.innerText = "وەرگرتنی کۆد";
-                return;
-            }
-        } catch (err) {
-            console.log("Apps Script error, trying proxy...");
-        }
-
-        // 2. ئەگەر Apps Script کاری نەکرد، هەوڵدان بە Proxy ی دەرەکی
-        try {
-            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(directApiURL);
+            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(directApiURL) + "&t=" + new Date().getTime();
             const response = await fetch(proxyUrl);
             const textData = await response.text();
 
@@ -128,11 +108,11 @@
             if (match) {
                 resultInput.value = match[0];
                 timerNotice.style.color = "#4caf50";
-                timerNotice.innerText = "کۆدەکە ڕاستەوخۆ وەرگیرا!";
+                timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
             } else {
                 resultInput.value = "نەدۆزرایەوە";
-                timerNotice.style.color = "#f44336";
-                timerNotice.innerText = "هیچ کۆدێک لە سێرڤەر نییە.";
+                timerNotice.style.color = "#ffb703";
+                timerNotice.innerText = "وەڵامی سێرڤەر: " + textData;
             }
         } catch (err) {
             resultInput.value = "کێشەی پەیوەندی";
