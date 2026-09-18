@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وەرگرتنی کۆد</title>
+    <title>AYAD PHONE - Verification Code</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0d1b2a;
-            color: white;
+            background-color: #0b132b;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
-        .container {
-            background-color: #1b263b;
+        .card {
+            background-color: #1c2541;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+            box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
             text-align: center;
             width: 320px;
         }
@@ -29,17 +29,17 @@
             margin: 10px 0;
             border-radius: 6px;
             border: 1px solid #00b4d8;
-            background-color: #0d1b2a;
-            color: #fff;
+            background-color: #0b132b;
+            color: #ffffff;
             text-align: center;
             font-size: 18px;
             font-weight: bold;
         }
         button {
             width: 98%;
-            padding: 10px;
+            padding: 12px;
             background-color: #00b4d8;
-            color: white;
+            color: #ffffff;
             border: none;
             border-radius: 6px;
             font-size: 16px;
@@ -47,88 +47,90 @@
             font-weight: bold;
         }
         button:hover {
-            background-color: #90e0ef;
-            color: #000;
+            background-color: #5bc0be;
         }
         .status {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #e0a96d;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #ffb703;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="card">
     <h3>کۆدی ڕاستێنەربوون</h3>
-    <input type="text" id="codeDisplay" placeholder="کۆد لێرە دەردەکەوێت" readonly>
-    <button id="fetchBtn" onclick="getCodeFromLink()">وەرگرتنی کۆد</button>
-    <div id="statusMsg" class="status"></div>
+    <input type="text" id="fetchedResultInput" placeholder="کۆد لێرە دەردەکەوێت" readonly>
+    <button id="fetchCodeBtn" onclick="getVerificationCode()">وەرگرتنی کۆد</button>
+    <div id="timerNotice" class="status"></div>
 </div>
 
 <script>
-async function getCodeFromLink() {
-    const btn = document.getElementById('fetchBtn');
-    const display = document.getElementById('codeDisplay');
-    const status = document.getElementById('statusMsg');
-    
-    // لێنکە تایبەتەکەی تۆ
-    const targetUrl = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
-    
-    // بەکارهێنانی CORS Proxy بۆ ئەوەی وێبگەڕ ڕێگری لە داواکارییەکە نەگرێت
-    const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl);
+    // Server API URL
+    const scriptURL = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
 
-    btn.disabled = true;
-    btn.innerText = "چاوەڕوان بە...";
-    display.value = "";
-    status.innerText = "";
+    async function getVerificationCode() {
+        const btn = document.getElementById('fetchCodeBtn');
+        const resultInput = document.getElementById('fetchedResultInput');
+        const timerNotice = document.getElementById('timerNotice');
 
-    try {
-        const response = await fetch(proxyUrl);
-        const responseText = await response.text();
-        
-        let extractedCode = null;
+        btn.disabled = true;
+        btn.innerText = "چاوەڕوان بە...";
+        resultInput.value = "";
+        timerNotice.innerText = "";
 
-        // 1. پشکنین ئەگەر وەڵامەکە JSON بێت
+        // Server-ampi suma aruskipañataki proxy (CORS blockage jark'aqañataki)
+        const targetProxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(scriptURL);
+
         try {
-            const jsonData = JSON.parse(responseText);
-            if (jsonData.data && /\d{6}/.test(jsonData.data.toString())) {
-                extractedCode = jsonData.data.toString().match(/\d{6}/)[0];
-            } else if (jsonData.code && /\d{6}/.test(jsonData.code.toString())) {
-                extractedCode = jsonData.code.toString().match(/\d{6}/)[0];
+            const response = await fetch(targetProxy);
+            if (!response.ok) {
+                throw new Error("Server response error: " + response.status);
             }
-        } catch (e) {
-            // ئەگەر JSON نەبوو دەچێتە بەشی دەق
-        }
 
-        // 2. ئەگەر لە JSON نەبوو، گەڕان بەدوای ٦ ژمارە لەناو دەقەکە (وەک ڕستەی چینەیەکە)
-        if (!extractedCode) {
-            const match = responseText.match(/\d{6}/);
-            if (match) {
-                extractedCode = match[0];
+            const responseText = await response.text();
+            let extractedCode = null;
+
+            // 1. JSON parsing (data / code)
+            try {
+                const json = JSON.parse(responseText);
+                if (json.data && /\d{6}/.test(String(json.data))) {
+                    extractedCode = String(json.data).match(/\d{6}/)[0];
+                } else if (json.code && /\d{6}/.test(String(json.code))) {
+                    extractedCode = String(json.code).match(/\d{6}/)[0];
+                }
+            } catch (e) {
+                // Not JSON, continue to raw text search
             }
-        }
 
-        // 3. نیشاندانی ئەنجام
-        if (extractedCode) {
-            display.value = extractedCode;
-            status.style.color = "#4CAF50";
-            status.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
-        } else {
-            display.value = "نەدۆزرایەوە";
-            status.style.color = "#FF5252";
-            status.innerText = "هیچ کۆدێکی ٦ ژمارەیی لە لینکەکەدا نەبوو.";
-        }
+            // 2. Regex search for 6-digit code (AppleID 登录验证码:845792)
+            if (!extractedCode) {
+                const match = responseText.match(/\d{6}/);
+                if (match) {
+                    extractedCode = match[0];
+                }
+            }
 
-    } catch (err) {
-        display.value = "هەڵە";
-        status.style.color = "#FF5252";
-        status.innerText = "کێشەیەک لە پەیوەندی بە لینکەکەوە ڕووی دا.";
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "وەرگرتنی کۆد";
+            // 3. Result verification
+            if (extractedCode) {
+                resultInput.value = extractedCode;
+                timerNotice.style.color = "#4caf50";
+                timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
+            } else {
+                resultInput.value = "نەدۆزرایەوە";
+                timerNotice.style.color = "#f44336";
+                timerNotice.innerText = "کۆدی ٦ ژمارەیی نەدۆزرایەوە.";
+            }
+
+        } catch (err) {
+            resultInput.value = "کێشە لە سەرڤەر";
+            timerNotice.style.color = "#f44336";
+            timerNotice.innerText = "پەیوەندی لەگەڵ سێرڤەر سەرکەوتوو نەبوو.";
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "وەرگرتنی کۆد";
+        }
     }
-}
 </script>
 
 </body>
