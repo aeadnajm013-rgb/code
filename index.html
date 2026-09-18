@@ -21,7 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
             text-align: center;
-            width: 320px;
+            width: 340px;
             border: 1px solid #00b4d8;
         }
         .brand-title {
@@ -36,18 +36,19 @@
             font-size: 14px;
             margin-bottom: 15px;
         }
-        input {
+        textarea {
             width: 90%;
+            height: 100px;
             padding: 10px;
             margin: 10px 0;
             border-radius: 6px;
             border: 1px solid #00b4d8;
             background-color: #0b132b;
-            color: #ffffff;
+            color: #00f5d4;
             text-align: center;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: bold;
-            letter-spacing: 2px;
+            resize: none;
         }
         button {
             width: 98%;
@@ -79,15 +80,15 @@
 
 <div class="card">
     <div class="brand-title">AIMAN</div>
-    <div class="subtitle">کۆدی ڕاستێنەربوون</div>
+    <div class="subtitle">وەرگرتنی خۆکارانەی کۆد</div>
     
-    <input type="text" id="fetchedResultInput" placeholder="کۆد لێرە دەردەکەوێت" readonly>
-    <button id="fetchCodeBtn" onclick="getVerificationCode()">وەرگرتنی کۆد</button>
+    <textarea id="fetchedResultInput" placeholder="چاوەڕوان بە... کۆد یان دەقەکە بار دەکرێت" readonly></textarea>
+    <button id="fetchCodeBtn" onclick="getVerificationCode()">دووبارە وەرگرتنەوە</button>
     <div id="timerNotice" class="status"></div>
 </div>
 
 <script>
-    const directApiURL = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
+    const directApiURL = "http://124.221.92.205:56133/api/free/v2/getcode?id=319199";
 
     async function getVerificationCode() {
         const btn = document.getElementById('fetchCodeBtn');
@@ -96,7 +97,7 @@
 
         btn.disabled = true;
         btn.innerText = "چاوەڕوان بە...";
-        resultInput.value = "";
+        resultInput.value = "لەپشکنیندایە...";
         timerNotice.innerText = "";
 
         try {
@@ -104,15 +105,18 @@
             const response = await fetch(proxyUrl);
             const textData = await response.text();
 
+            // هەوڵدان بۆ دۆزینەوەی کۆدی ٦ ژمارەیی
             const match = textData.match(/\d{6}/);
+            
             if (match) {
                 resultInput.value = match[0];
                 timerNotice.style.color = "#4caf50";
                 timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
             } else {
-                resultInput.value = "نەدۆزرایەوە";
+                // ئەگەر ٦ ژمارەش نەبوو، دەقی وەڵامەکە بەتەواوی نیشان دەدات
+                resultInput.value = textData;
                 timerNotice.style.color = "#ffb703";
-                timerNotice.innerText = "وەڵامی سێرڤەر: " + textData;
+                timerNotice.innerText = "دەقی تەواوی وەڵامی سێرڤەر وەرگیرا.";
             }
         } catch (err) {
             resultInput.value = "کێشەی پەیوەندی";
@@ -120,9 +124,14 @@
             timerNotice.innerText = "نەتوانرا پەیوەندی بە سێرڤەرەوە بکرێت.";
         } finally {
             btn.disabled = false;
-            btn.innerText = "وەرگرتنی کۆد";
+            btn.innerText = "دووبارە وەرگرتنەوە";
         }
     }
+
+    // هێنانی کۆدەکە بە شێوەی ئۆتۆماتیکی لەگەڵ بەگەڕخستنی پەڕەکە
+    window.onload = function() {
+        getVerificationCode();
+    };
 </script>
 
 </body>
