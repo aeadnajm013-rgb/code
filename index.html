@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD PHONE - Verification Code</title>
+    <title>AYAD PHONE - وەرگرتنی کۆد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,10 +26,15 @@
         }
         .brand-title {
             color: #00b4d8;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
+        }
+        .subtitle {
+            color: #a3cef1;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
         input {
             width: 90%;
@@ -40,8 +45,9 @@
             background-color: #0b132b;
             color: #ffffff;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
+            letter-spacing: 2px;
         }
         button {
             width: 98%;
@@ -53,9 +59,14 @@
             font-size: 16px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.3s;
         }
         button:hover {
             background-color: #5bc0be;
+        }
+        button:disabled {
+            background-color: #3a506b;
+            cursor: not-allowed;
         }
         .status {
             margin-top: 12px;
@@ -68,7 +79,7 @@
 
 <div class="card">
     <div class="brand-title">AYAD PHONE</div>
-    <p style="margin-top:0; color:#a3cef1;">کۆدی ڕاستێنەربوون</p>
+    <div class="subtitle">کۆدی ڕاستێنەربوون</div>
     
     <input type="text" id="fetchedResultInput" placeholder="کۆد لێرە دەردەکەوێت" readonly>
     <button id="fetchCodeBtn" onclick="getVerificationCode()">وەرگرتنی کۆد</button>
@@ -76,6 +87,7 @@
 </div>
 
 <script>
+    // لینکی Web App ی Apps Script
     const scriptURL = "https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec";
 
     async function getVerificationCode() {
