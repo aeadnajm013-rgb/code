@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD PHONE - Verification Code</title>
+    <title>AYAD PHONE - وەرگرتنی کۆد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,8 +66,8 @@
 </div>
 
 <script>
-    // Server API URL
-    const scriptURL = "http://devices.orangeid.top:56133/api/free/v4/getcode?id=4522128";
+    // لینکی Apps Scriptەکەی تۆ
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz2e00fR-qgX70w6-3tekTEwlAaGeaABZBpRE5MLtL2CaLgT7zk8kv7q8Dd_r1aT2KXRw/exec";
 
     async function getVerificationCode() {
         const btn = document.getElementById('fetchCodeBtn');
@@ -79,53 +79,24 @@
         resultInput.value = "";
         timerNotice.innerText = "";
 
-        // Server-ampi suma aruskipañataki proxy (CORS blockage jark'aqañataki)
-        const targetProxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(scriptURL);
-
         try {
-            const response = await fetch(targetProxy);
-            if (!response.ok) {
-                throw new Error("Server response error: " + response.status);
-            }
+            // داواکاری ناردن بۆ Apps Script بە پارامێتەری getCode=true
+            const response = await fetch(`${scriptURL}?getCode=true`);
+            const data = await response.json();
 
-            const responseText = await response.text();
-            let extractedCode = null;
-
-            // 1. JSON parsing (data / code)
-            try {
-                const json = JSON.parse(responseText);
-                if (json.data && /\d{6}/.test(String(json.data))) {
-                    extractedCode = String(json.data).match(/\d{6}/)[0];
-                } else if (json.code && /\d{6}/.test(String(json.code))) {
-                    extractedCode = String(json.code).match(/\d{6}/)[0];
-                }
-            } catch (e) {
-                // Not JSON, continue to raw text search
-            }
-
-            // 2. Regex search for 6-digit code (AppleID 登录验证码:845792)
-            if (!extractedCode) {
-                const match = responseText.match(/\d{6}/);
-                if (match) {
-                    extractedCode = match[0];
-                }
-            }
-
-            // 3. Result verification
-            if (extractedCode) {
-                resultInput.value = extractedCode;
+            if (data.status === "success" && data.code) {
+                resultInput.value = data.code;
                 timerNotice.style.color = "#4caf50";
                 timerNotice.innerText = "کۆدەکە بە سەرکەوتوویی وەرگیرا!";
             } else {
                 resultInput.value = "نەدۆزرایەوە";
                 timerNotice.style.color = "#f44336";
-                timerNotice.innerText = "کۆدی ٦ ژمارەیی نەدۆزرایەوە.";
+                timerNotice.innerText = data.message || "کۆدەکە نەدۆزرایەوە.";
             }
-
         } catch (err) {
-            resultInput.value = "کێشە لە سەرڤەر";
+            resultInput.value = "کێشەی پەیوەندی";
             timerNotice.style.color = "#f44336";
-            timerNotice.innerText = "پەیوەندی لەگەڵ سێرڤەر سەرکەوتوو نەبوو.";
+            timerNotice.innerText = "پەیوەستبوون لەگەڵ سێرڤەر سەرکەوتوو نەبوو.";
         } finally {
             btn.disabled = false;
             btn.innerText = "وەرگرتنی کۆد";
