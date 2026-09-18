@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD - وەرگرتنی خێرا</title>
+    <title>AIMAN - وەرگرتنی دەق و کۆد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
             text-align: center;
-            width: 340px;
+            width: 350px;
             border: 1px solid #00b4d8;
         }
         .brand-title {
@@ -38,7 +38,7 @@
         }
         textarea {
             width: 92%;
-            height: 110px;
+            height: 120px;
             padding: 10px;
             margin: 10px 0;
             border-radius: 6px;
@@ -46,7 +46,7 @@
             background-color: #0b132b;
             color: #00f5d4;
             text-align: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             resize: none;
             direction: ltr;
@@ -65,6 +65,10 @@
         button:hover {
             background-color: #5bc0be;
         }
+        button:disabled {
+            background-color: #3a506b;
+            cursor: not-allowed;
+        }
         .status {
             margin-top: 12px;
             font-size: 13px;
@@ -76,11 +80,11 @@
 <body>
 
 <div class="card">
-    <div class="brand-title">AYAD</div>
-    <div class="subtitle">وەرگرتنی ئۆتۆماتیکی و ڕاستەوخۆ</div>
+    <div class="brand-title">AIMAN</div>
+    <div class="subtitle">خوێندنەوەی ڕاستەوخۆی وەڵامی سێرڤەر</div>
     
-    <textarea id="fetchedResultInput" placeholder="لەپشکنینی بەردەوامدایە..." readonly></textarea>
-    <button id="fetchCodeBtn" onclick="getVerificationCode()">نوێکردنەوەی ئێستا</button>
+    <textarea id="fetchedResultInput" placeholder="چاوەڕوان بە... دەقەکە لە پاش پشتەوە وەرپێڕێزرێت" readonly></textarea>
+    <button id="fetchCodeBtn" onclick="getVerificationCode()">دووبارە وەرگرتنەوە</button>
     <div id="timerNotice" class="status"></div>
 </div>
 
@@ -88,33 +92,44 @@
     const directApiURL = "http://124.221.92.205:56133/api/free/v2/getcode?id=319199";
 
     async function getVerificationCode() {
+        const btn = document.getElementById('fetchCodeBtn');
         const resultInput = document.getElementById('fetchedResultInput');
         const timerNotice = document.getElementById('timerNotice');
 
+        btn.disabled = true;
+        btn.innerText = "چاوەڕوان بە...";
+        resultInput.value = "لە پشکنیندایە...";
+        timerNotice.innerText = "";
+
         try {
-            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(directApiURL) + "&_t=" + Date.now();
-            
+            // بەکارهێنانی Proxy بۆ تێپەڕاندنی کێشەی CORS
+            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(directApiURL) + "&t=" + new Date().getTime();
             const response = await fetch(proxyUrl);
             const textData = await response.text();
 
             if (textData && textData.trim() !== "") {
+                // تەواوی ئەو دەق و هێمایانەی سێرڤەر دەیگەرێنێتەوە ڕاستەوخۆ نیشانی دەدات
                 resultInput.value = textData.trim();
                 timerNotice.style.color = "#4caf50";
-                timerNotice.innerText = "دواین ڕەوش: زانیاری وەرگیرا";
+                timerNotice.innerText = "وەڵامی سێرڤەر بە تەواوی وەستێنرا و خوێنرایەوە!";
             } else {
-                resultInput.value = "دەق یان کۆد بوونی نییە";
+                resultInput.value = "هیچ دەقێک نییە";
                 timerNotice.style.color = "#ffb703";
-                timerNotice.innerText = "سێرڤەر وەڵامی بەتاڵی گەڕاندەوە";
+                timerNotice.innerText = "سێرڤەرەکە وەڵامێکی بەتاڵی گەڕاندەوە.";
             }
         } catch (err) {
+            resultInput.value = "کێشەی پەیوەندی";
             timerNotice.style.color = "#f44336";
-            timerNotice.innerText = "کێشە لە پەیوەستبوون بە سێرڤەر";
+            timerNotice.innerText = "نەتوانرا لە پاش پشتەوە پەیوەندی بە سێرڤەرەکەوە بکرێت.";
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "دووبارە وەرگرتنەوە";
         }
     }
 
+    // هەرکە پەڕەکە کرایەوە خۆکارانە دەست بە پشکنین دەکات
     window.onload = function() {
         getVerificationCode();
-        setInterval(getVerificationCode, 2000);
     };
 </script>
 
