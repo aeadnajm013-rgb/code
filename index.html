@@ -20,12 +20,9 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+        h2 { color: #333; margin-bottom: 20px; }
         button {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             border: none;
             padding: 14px 20px;
@@ -34,16 +31,9 @@
             cursor: pointer;
             width: 100%;
             font-weight: bold;
-            transition: 0.2s;
         }
-        button:hover {
-            background-color: #218838;
-        }
-        #status {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #666;
-        }
+        button:hover { background-color: #0056b3; }
+        #status { margin-top: 15px; font-size: 14px; color: #666; }
         .code-box {
             margin-top: 20px;
             padding: 15px;
@@ -72,12 +62,7 @@
 </div>
 
 <script>
-    async function getCode() {
-        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
-        
-        // بەکارهێنانی سێرڤەری Proxy
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl + '&_t=' + Date.now());
-
+    function getCode() {
         const statusDiv = document.getElementById('status');
         const codeDisplay = document.getElementById('codeDisplay');
 
@@ -85,59 +70,39 @@
         statusDiv.style.color = '#007bff';
         codeDisplay.innerText = '......';
 
-        try {
-            const response = await fetch(proxyUrl);
-            
-            if (!response.ok) {
-                throw new Error('کێشە لە وەڵامی سێرڤەر هەبوو');
-            }
+        // سڕینەوەی سکریپتی کۆن ئەگەر هەبێت
+        const oldScript = document.getElementById('jsonpScript');
+        if (oldScript) oldScript.remove();
 
-            const rawText = await response.text();
-            let codeValue = null;
+        // دروستکردنی کات بۆ دەستکەوتنی کۆدی نوێ بێ Cache
+        const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199&_t=' + Date.now();
 
-            // ١. هەوڵدان بۆ شیکردنەوەی JSON
-            try {
-                const jsonObj = JSON.parse(rawText);
-                if (jsonObj && jsonObj.data !== undefined) {
-                    codeValue = String(jsonObj.data);
-                }
-            } catch (e) {
-                // ئەگەر JSON نەبوو کێشە نییە
-            }
+        // دروستکردنی Script Tag بۆ دەربازبوون لە CORS
+        const script = document.createElement('script');
+        script.id = 'jsonpScript';
+        script.src = targetUrl;
 
-            // ٢. ئەگەر بە JSON نەدۆزرایەوە، بە Regex گەڕان لە ناو دەقدا دەکات
-            if (!codeValue) {
-                const matchData = rawText.match(/"data"\s*:\s*"([^"]+)"/);
-                if (matchData) {
-                    codeValue = matchData[1];
-                }
-            }
+        // کاتێک سکریپتەکە باربوو
+        script.onload = function() {
+            statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
+            statusDiv.style.color = 'green';
+        };
 
-            // ٣. ئەگەر ئەوەش نەبوو، تەنها بەدوای ٦ ژمارەی بەدوای یەکدا دەگەڕێت
-            if (!codeValue) {
-                const matchNumber = rawText.match(/\b\d{6}\b/);
-                if (matchNumber) {
-                    codeValue = matchNumber[0];
-                }
-            }
-
-            if (codeValue) {
-                codeDisplay.style.fontSize = '45px';
-                codeDisplay.innerText = codeValue;
-                statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
-                statusDiv.style.color = 'green';
-            } else {
-                codeDisplay.style.fontSize = '18px';
-                codeDisplay.innerText = rawText;
-                statusDiv.innerText = 'ئەم دەقە هاتەوە لە سێرڤەرەوە:';
-                statusDiv.style.color = 'orange';
-            }
-
-        } catch (error) {
-            codeDisplay.style.fontSize = '35px';
-            codeDisplay.innerText = 'ERROR';
-            statusDiv.innerText = 'نەتوانرا پەیوەندی بە سێرڤەرەکە بپەیوەستێنرێت، دووبارە تاقی بکەرەوە.';
+        script.onerror = function() {
+            // ئەگەر وێبگەڕەکە ڕێگەی نەدا ڕاستەوخۆ دەقەکە بخوێنێتەوە بەهۆی CORS
+            statusDiv.innerText = 'هەڵە لە هێنانی زانیاری! (کێشەی ڕێگەپێدانی سێرڤەر)';
             statusDiv.style.color = 'red';
+            codeDisplay.innerText = 'ERROR';
+        };
+
+        document.body.appendChild(script);
+    }
+
+    // فەنکشن بۆ وەرگرتنی وەڵامی JSON لە سێرڤەرەکەوە
+    function handleResponse(response) {
+        const codeDisplay = document.getElementById('codeDisplay');
+        if (response && response.data) {
+            codeDisplay.innerText = response.data;
         }
     }
 </script>
