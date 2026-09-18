@@ -75,7 +75,7 @@
     async function getCode() {
         const targetUrl = 'http://124.221.92.205:56133/api/free/v2/getcode?id=319199';
         
-        // بەکارهێنانی CORS Proxy
+        // بەکارهێنانی سێرڤەری Proxy
         const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl + '&_t=' + Date.now());
 
         const statusDiv = document.getElementById('status');
@@ -89,42 +89,54 @@
             const response = await fetch(proxyUrl);
             
             if (!response.ok) {
-                throw new Error('کێشە لە وەلامی سێرڤەر هەبوو');
+                throw new Error('کێشە لە وەڵامی سێرڤەر هەبوو');
             }
 
             const rawText = await response.text();
-            
-            // شیکردنەوەی JSON
             let codeValue = null;
-            
+
+            // ١. هەوڵدان بۆ شیکردنەوەی JSON
             try {
                 const jsonObj = JSON.parse(rawText);
-                if (jsonObj && jsonObj.data) {
-                    codeValue = jsonObj.data;
+                if (jsonObj && jsonObj.data !== undefined) {
+                    codeValue = String(jsonObj.data);
                 }
             } catch (e) {
-                // ئەگەر وەک JSON نەخوێنرایەوە، بە Regex دەری دێنێت
-                const match = rawText.match(/"data"\s*:\s*"(\d{6})"/);
-                if (match) {
-                    codeValue = match[1];
+                // ئەگەر JSON نەبوو کێشە نییە
+            }
+
+            // ٢. ئەگەر بە JSON نەدۆزرایەوە، بە Regex گەڕان لە ناو دەقدا دەکات
+            if (!codeValue) {
+                const matchData = rawText.match(/"data"\s*:\s*"([^"]+)"/);
+                if (matchData) {
+                    codeValue = matchData[1];
+                }
+            }
+
+            // ٣. ئەگەر ئەوەش نەبوو، تەنها بەدوای ٦ ژمارەی بەدوای یەکدا دەگەڕێت
+            if (!codeValue) {
+                const matchNumber = rawText.match(/\b\d{6}\b/);
+                if (matchNumber) {
+                    codeValue = matchNumber[0];
                 }
             }
 
             if (codeValue) {
+                codeDisplay.style.fontSize = '45px';
                 codeDisplay.innerText = codeValue;
                 statusDiv.innerText = 'بەسەرکەوتوویی وەرگیرا!';
                 statusDiv.style.color = 'green';
             } else {
-                codeDisplay.style.fontSize = '20px';
+                codeDisplay.style.fontSize = '18px';
                 codeDisplay.innerText = rawText;
-                statusDiv.innerText = 'ژمارەکە لە ناو JSONدا نەدۆزرایەوە!';
+                statusDiv.innerText = 'ئەم دەقە هاتەوە لە سێرڤەرەوە:';
                 statusDiv.style.color = 'orange';
             }
 
         } catch (error) {
             codeDisplay.style.fontSize = '35px';
             codeDisplay.innerText = 'ERROR';
-            statusDiv.innerText = 'نەتوانرا پەیوەندی بە سێرڤەرەکە بکریت، دووبارە تاقی بکەرەوە.';
+            statusDiv.innerText = 'نەتوانرا پەیوەندی بە سێرڤەرەکە بپەیوەستێنرێت، دووبارە تاقی بکەرەوە.';
             statusDiv.style.color = 'red';
         }
     }
