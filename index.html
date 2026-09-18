@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAD - وەرگرتنی خێرا و چاوەدێری</title>
+    <title>AYAD - وەرگرتنی دەقی سێرڤەر</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,7 +38,7 @@
         }
         textarea {
             width: 92%;
-            height: 120px;
+            height: 130px;
             padding: 10px;
             margin: 10px 0;
             border-radius: 6px;
@@ -50,6 +50,7 @@
             font-weight: bold;
             resize: none;
             direction: ltr;
+            white-space: pre-wrap;
         }
         button {
             width: 98%;
@@ -77,10 +78,10 @@
 
 <div class="card">
     <div class="brand-title">AYAD</div>
-    <div class="subtitle">چاوەدێری و وەرگرتنی زۆر خێرا</div>
+    <div class="subtitle">کردنەوە و وەرگرتنی ڕاستەوخۆی دەق</div>
     
-    <textarea id="fetchedResultInput" placeholder="چاوەڕوان بە... لە چاوەدێریدا دەستبەجێ دەردەکەوێت" readonly></textarea>
-    <button id="fetchCodeBtn" onclick="getVerificationCode(true)">نوێکردنەوەی دەستی</button>
+    <textarea id="fetchedResultInput" placeholder="دەقەکە لێرە دەردەکەوێت..." readonly></textarea>
+    <button id="fetchCodeBtn" onclick="getRawText(true)">نوێکردنەوە</button>
     <div id="timerNotice" class="status"></div>
 </div>
 
@@ -88,45 +89,40 @@
     const directApiURL = "http://124.221.92.205:56133/api/free/v2/getcode?id=319199";
     let isFetching = false;
 
-    async function getVerificationCode(isManual = false) {
-        if (isFetching) return; // ڕێگری لە داواکاری دووبارە دەکات تا ئەوی پێشوو تەواو دەبێت
+    async function getRawText(isManual = false) {
+        if (isFetching) return;
         isFetching = true;
 
         const resultInput = document.getElementById('fetchedResultInput');
         const timerNotice = document.getElementById('timerNotice');
 
         if (isManual) {
-            timerNotice.innerText = "لە پشکنیندا...";
+            timerNotice.innerText = "لە هەوڵی وەرگرتندایە...";
         }
 
         try {
-            // بەکارهێنانی corsproxy بۆ گەیاندنی زۆر خێرا
+            // بەکارهێنانی corsproxy بۆ ئەوەی ڕاستەوخۆ دەقی لینکەکە لە براوسەردا بکاتەوە
             const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(directApiURL) + "&_t=" + Date.now();
             const response = await fetch(proxyUrl);
             const textData = await response.text();
 
-            if (textData && textData.trim() !== "") {
-                resultInput.value = textData.trim();
-                timerNotice.style.color = "#4caf50";
-                timerNotice.innerText = "دەق/کۆد بەسەرکەوتوویی هێنرا!";
-            } else {
-                resultInput.value = "هیچ دەقێک نییە";
-                timerNotice.style.color = "#ffb703";
-                timerNotice.innerText = "سێرڤەر وەڵامی بەتاڵی گەڕاندەوە.";
-            }
+            // هەموو دەقێک بەبێ دەستکاری نیشان دەدات
+            resultInput.value = textData;
+            timerNotice.style.color = "#4caf50";
+            timerNotice.innerText = "وەڵامی لینکەکە بەسەرکەوتوویی هێنرا!";
         } catch (err) {
             timerNotice.style.color = "#f44336";
-            timerNotice.innerText = "کێشەی پەیوەستبوون بە سێرڤەر.";
+            timerNotice.innerText = "کێشە لە ڕاکێشانی دەقی لینکەکە.";
         } finally {
             isFetching = false;
         }
     }
 
-    // دەستپێکردنی ئۆتۆماتیکی
+    // بەگەڕخستنی ئۆتۆماتیکی
     window.onload = function() {
-        getVerificationCode();
-        // هەر ١.٥ چرکە جارێک چاوەدێری سێرڤەرەکە دەکات بە بێ وەستان
-        setInterval(() => getVerificationCode(false), 1500);
+        getRawText();
+        // بەردەوام هەر ١.٥ چرکە جارێک نوێی دەکاتەوە
+        setInterval(() => getRawText(false), 1500);
     };
 </script>
 
