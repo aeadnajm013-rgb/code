@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AAN - وەرگرتنی خێرا</title>
+    <title>AYAD - وەرگرتنی خێرا</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -76,7 +76,7 @@
 <body>
 
 <div class="card">
-    <div class="brand-title">AIMAN</div>
+    <div class="brand-title">AYAD</div>
     <div class="subtitle">وەرگرتنی ئۆتۆماتیکی و ڕاستەوخۆ</div>
     
     <textarea id="fetchedResultInput" placeholder="لەپشکنینی بەردەوامدایە..." readonly></textarea>
@@ -92,7 +92,6 @@
         const timerNotice = document.getElementById('timerNotice');
 
         try {
-            // بەکارهێنانی corsproxy.io کە زۆر خێراترە لە proxyکانی تر
             const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(directApiURL) + "&_t=" + Date.now();
             
             const response = await fetch(proxyUrl);
@@ -113,10 +112,8 @@
         }
     }
 
-    // هەڵکردنی خۆکارانە لە کاتی بۆنەبوونی پەڕەکە
     window.onload = function() {
         getVerificationCode();
-        // بەردەوام بە شێوەی ئۆتۆماتیکی هەر ۲ چرکە جارێک نوێی دەکاتەوە
         setInterval(getVerificationCode, 2000);
     };
 </script>
